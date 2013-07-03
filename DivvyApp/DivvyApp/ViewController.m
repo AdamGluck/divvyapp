@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "BGLDivvyDataAccess.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface ViewController () <BGLDivvyDataAccessDelegate>{
     int count;
@@ -30,10 +31,16 @@
     self.dataAccess.autoRefresh = YES;
     //[data fillStationDataASynchroniously];
     
-    //NSLog(@"%@", data.stationData);
+    // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
+    
+    
 }
 
 -(void) asynchroniousFillRequestComplete: (NSArray *) data{
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:@"41.873".doubleValue longitude:@"-87.62".doubleValue];
+    
+    NSLog(@"%@", [self.dataAccess grabNearestStationTo:location]);
+    [self.dataAccess grabNearestStationToDevice];
     count++;
     if (count == 5)
         self.dataAccess.autoRefresh = NO;
@@ -41,6 +48,14 @@
 
 -(void) requestFailedWithError:(NSError *)error{
     NSLog(@"ERROR!!!");
+}
+
+-(void) nearestStationToDeviceFoundWithStation:(NSDictionary *)station{
+    NSLog(@"station found with %@", station);
+}
+
+-(void) deviceLocationFoundAtLocation: (CLLocation *) location{
+    NSLog(@"device locaiton %@", location);
 }
 
 

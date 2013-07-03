@@ -8,7 +8,7 @@
 
 #import "BGLDivvyDataAccess.h"
 
-@interface BGLDivvyDataAccess()
+@interface BGLDivvyDataAccess() <CLLocationManagerDelegate>
 
 @property (strong, nonatomic) NSTimer * refreshTimer;
 
@@ -21,7 +21,7 @@
 
 #pragma mark - easy request functions
 
-- (NSArray *) myGetRequest: (NSURL *) url{
+- (id) myGetRequest: (NSURL *) url{
     
     NSArray *json = [[NSArray alloc] init];
     
@@ -51,10 +51,10 @@
 
 #pragma mark - getters
 
--(NSArray *) stationData{
+-(NSDictionary *) stationData{
     
     if (!_stationData){
-        _stationData = [[NSArray alloc] init];
+        _stationData = [[NSDictionary alloc] init];
     }
     
     return _stationData;
@@ -93,7 +93,7 @@
 }
 
 -(void) fillStationDataASynchroniously{
-    __block NSArray * blockStationData;
+    __block NSDictionary * blockStationData;
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("Grab Divvy Data", NULL);
     dispatch_async(downloadQueue, ^{
@@ -126,6 +126,57 @@
     if ([self.delegate respondsToSelector:@selector(requestFailedWithError:)])
         [self.delegate requestFailedWithError:error];
 }
+
+#pragma mark - location grabbing items
+
+-(NSDictionary *) grabNearestStationTo:(CLLocation *)location{
+    
+    NSDictionary * nearestStation;
+    CLLocationDistance shortestDistance;
+    for (NSDictionary * station in self.stationData[@"stationBeanList"]){
+        
+        if (!nearestStation) // for the first run through
+            nearestStation = station;
+        
+        NSString * lattitudeString = station[@"lattitude"];
+        NSString * longitudeString = station[@"longitutde"];
+        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: lattitudeString.doubleValue longitude:longitudeString.doubleValue];
+        
+        CLLocationDistance distance = [location distanceFromLocation:stationLocation];
+        
+        if (distance < shortestDistance){
+            shortestDistance = distance;
+            nearestStation = station;
+        } else if (!shortestDistance){ // for the first run through
+            shortestDistance = distance;
+        }
+    }
+    
+    return nearestStation;
+}
+
+-(void) grabNearestStationToDevice{
+    NSLog(@"called");
+    CLLocationManager * locationManager = [[CLLocationManager alloc] init];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.delegate = self;
+    [locationManager startUpdatingLocation];
+    
+}
+
+-(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    
+    if ([self.delegate respondsToSelector:@selector(deviceLocationFoundAtLocation:)])
+        [self.delegate deviceLocationFoundAtLocation:manager.location];
+    
+    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:)])
+        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location]];
+    
+}
+
+
+
+
 
 
 
