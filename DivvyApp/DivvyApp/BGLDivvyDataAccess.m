@@ -33,7 +33,7 @@
 
     if (dataGrabbingError){
         [self performSelector:@selector(errorGrabbingData:) onThread:[NSThread mainThread] withObject:dataGrabbingError waitUntilDone:NO];
-        return @[];
+        return @{};
     }
     
     NSError *error;
@@ -100,12 +100,12 @@
         blockStationData = [self myGetRequest:url];
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([blockStationData count] != 0)
+            if ([[blockStationData allKeys] count] != 0)
                 self.stationData = blockStationData;
             else
                 self.stationData = @{@"error": @"use error delegate method for more information"};
             
-            if ([blockStationData count] != 0 && [self.delegate respondsToSelector:@selector(asynchronousFillRequestComplete:)]){
+            if ([[blockStationData allKeys] count] != 0 && [self.delegate respondsToSelector:@selector(asynchronousFillRequestComplete:)]){
                 [self.delegate asynchronousFillRequestComplete: self.stationData];
             }
             
