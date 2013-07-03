@@ -100,8 +100,10 @@
         blockStationData = [self myGetRequest:url];
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if (blockStationData != 0)
+            if ([blockStationData count] != 0)
                 self.stationData = blockStationData;
+            else
+                self.stationData = @{@"error": @"use error delegate method for more information"};
             
             if ([blockStationData count] != 0 && [self.delegate respondsToSelector:@selector(asynchronousFillRequestComplete:)]){
                 [self.delegate asynchronousFillRequestComplete: self.stationData];
