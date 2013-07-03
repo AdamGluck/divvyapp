@@ -24,7 +24,8 @@
 
 @property (weak, nonatomic) id <BGLDivvyDataAccessDelegate> delegate;
 
-/* These properties all relate to filling raw stationData */
+/* These properties and methods all relate to filling raw station data */
+
 // note: the data is a dictionary
 // the first entry is "executionTime" which has a timestamp of the execution
 // the second entry is "stationBeanList" which has all the relevent data
@@ -39,14 +40,18 @@
 // note that this calls synchroniously, so the main thread will freeze if this is called and the server request takes too long
 -(void) fillStationDataSynchronously;
 
-// this will make the request to server in a background thread
+// this will make the request to server in a background thread so the UI does not freeze when called
 // it will fill stationData with fresh data and call asynchronousFillDataRequestFinished when complete
+// note: if you want to guarentee a method gets called using the newly updated station data and you are using this method, implement the code after you get the station data in the deleget method asynchronousFillRequestComplete:
 -(void) fillStationDataASynchronously;
 
 /* these properties allow you to grab particular properties as arrays of the station data */
 
+// this assumes that the station data has been filled
 -(NSDictionary *) grabNearestStationTo: (CLLocation *) location;
 
+// This returns the nearest station in the delegate method nearestStationToDeviceFoundWithStation:
+// It also returns the location of the nearest station, and errors if it cannot connect to the GPS in the appropriate methods
 -(void) grabNearestStationToDevice;
 
 
