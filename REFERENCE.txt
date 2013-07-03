@@ -1,0 +1,23 @@
+Contained is an iOS API to access the Divvy Data.
+
+Steps to use:
+1) The API is wrapped in a very simple sample app that I plan to build out in the future to demonstrate possible functionality of the API.  The app allows you to press a button and see the name of the nearest station to you.  Open that project folder.
+
+2) You should see BGLDivvyDataAccess.h and .m.  Copy those files into your new project.  Make sure you check the box that asks you if you want to actually copy the files, not simply reference them.
+
+3) Go to the project settings (top of the file tree on the left, blue icon).  Under targets, select your app name.  Select build phases.  Press +. Type "CoreLocation" press "Add".
+
+4) The explanation on how to use the API is in the BGLDivvyDataAccess.h.
+
+What this version supports:
+
+1) Asynchronous and synchronous requests to the Divvy data.
+2) An auto-update feature, so that your data will automatically update every minute.
+3) Functions that allow you to get the nearest station to your device and the nearest station to any given longitude and latitude.
+
+This should get anyone who wants to work with the divvy dataset rolling on iOS.
+
+If you find any bugs, or have any suggestions or requests for things to add feel free to e-mail me at adamt.gluck@gmail.com or to message me on LinkedIn!
+
+All the best,
+Adam Gluck

@@ -3,7 +3,7 @@
 //  DivvyApp
 //
 //  Created by Adam Gluck on 7/2/13.
-//  Copyright (c) 2013 BGL. All rights reserved.
+//  Given freely to be used on any project, commercial or, ideally, civic.
 //
 
 #import "AppDelegate.h"

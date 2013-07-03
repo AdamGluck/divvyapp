@@ -12,8 +12,13 @@
 
 @optional
 
+// These delegate methods are called in response to attempts to grab data from the server
+// The names are fairly self-explanatory, although e-mail me if you have need of further clarification.
+// Note: asynchronousFillRequestComplete: will not be called if the request fails
 -(void) asynchronousFillRequestComplete: (NSDictionary *) data;
 -(void) requestFailedWithError: (NSError *) error;
+
+// Names here are self explanatory again, are called in response to grabNearestStationToDevice being called.
 -(void) deviceLocationFoundAtLocation: (CLLocation *) deviceLocation;
 -(void) deviceLocationNotFoundWithError: (NSError *) error;
 -(void) nearestStationToDeviceFoundWithStation: (NSDictionary *) station;
