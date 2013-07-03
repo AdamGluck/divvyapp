@@ -15,6 +15,7 @@
 }
 
 @property (strong, nonatomic) BGLDivvyDataAccess * dataAccess;
+@property (strong, nonatomic) IBOutlet UITextField *nearestLocationText;
 
 @end
 
@@ -28,22 +29,16 @@
     self.dataAccess = [[BGLDivvyDataAccess alloc] init];
     
     self.dataAccess.delegate = self;
-    self.dataAccess.autoRefresh = YES;
-    //[data fillStationDataASynchroniously];
+    //self.dataAccess.autoRefresh = YES;
+    [self.dataAccess fillStationDataASynchronously];
     
     // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
     
     
 }
 
--(void) asynchroniousFillRequestComplete: (NSArray *) data{
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:@"41.873".doubleValue longitude:@"-87.62".doubleValue];
+-(void) asynchronousFillRequestComplete: (NSArray *) data{
     
-    NSLog(@"%@", [self.dataAccess grabNearestStationTo:location]);
-    [self.dataAccess grabNearestStationToDevice];
-    count++;
-    if (count == 5)
-        self.dataAccess.autoRefresh = NO;
 }
 
 -(void) requestFailedWithError:(NSError *)error{
@@ -55,9 +50,12 @@
 }
 
 -(void) deviceLocationFoundAtLocation: (CLLocation *) location{
-    NSLog(@"device locaiton %@", location);
+    //NSLog(@"device location %@", location);
 }
 
+- (IBAction)nearestLocationButtonPressed:(id)sender {
+    [self.dataAccess grabNearestStationToDevice];
+}
 
 - (void)didReceiveMemoryWarning
 {

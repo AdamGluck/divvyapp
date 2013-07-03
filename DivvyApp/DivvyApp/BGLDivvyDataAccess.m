@@ -11,6 +11,7 @@
 @interface BGLDivvyDataAccess() <CLLocationManagerDelegate>
 
 @property (strong, nonatomic) NSTimer * refreshTimer;
+@property (strong, nonatomic) CLLocationManager * locationManager;
 
 @end
 
@@ -36,9 +37,7 @@
     }
     
     NSError *error;
-    
-    NSLog(@"before if called");
-    
+        
     if (data)
         json = [NSJSONSerialization
                 JSONObjectWithData:data
@@ -72,7 +71,7 @@
         if (theBool){
             self.refreshTimer = [[NSTimer alloc] init];
             self.refreshTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(refresh) userInfo:nil repeats:YES];
-            [self fillStationDataASynchroniously];
+            [self fillStationDataASynchronously];
         } else {
             [self.refreshTimer invalidate];
             self.refreshTimer = nil;
@@ -86,13 +85,13 @@
 
 #pragma mark - fill data methods
 
--(void) fillStationDataSynchroniously{
+-(void) fillStationDataSynchronously{
     NSString * requestString = [[NSString alloc] initWithFormat:@"https://divvybikes.com/stations/json"];
     NSURL * url = [[NSURL alloc] initWithString:requestString];
     self.stationData = [self myGetRequest:url];
 }
 
--(void) fillStationDataASynchroniously{
+-(void) fillStationDataASynchronously{
     __block NSDictionary * blockStationData;
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("Grab Divvy Data", NULL);
@@ -104,9 +103,8 @@
             if (blockStationData != 0)
                 self.stationData = blockStationData;
             
-            if ([blockStationData count] != 0 && [self.delegate respondsToSelector:@selector(asynchroniousFillRequestComplete:)]){
-                NSLog(@"responds and is sending to delegate");
-                [self.delegate asynchroniousFillRequestComplete: self.stationData];
+            if ([blockStationData count] != 0 && [self.delegate respondsToSelector:@selector(asynchronousFillRequestComplete:)]){
+                [self.delegate asynchronousFillRequestComplete: self.stationData];
             }
             
         });
@@ -116,8 +114,7 @@
 #pragma mark - Timer Function
 
 -(void) refresh{
-    [self fillStationDataASynchroniously];
-    NSLog(@"refresh called");
+    [self fillStationDataASynchronously];
 }
 
 #pragma mark - error selector
@@ -134,14 +131,10 @@
     NSDictionary * nearestStation;
     CLLocationDistance shortestDistance;
     for (NSDictionary * station in self.stationData[@"stationBeanList"]){
-        
-        if (!nearestStation) // for the first run through
-            nearestStation = station;
-        
-        NSString * lattitudeString = station[@"lattitude"];
-        NSString * longitudeString = station[@"longitutde"];
-        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: lattitudeString.doubleValue longitude:longitudeString.doubleValue];
-        
+                
+        NSString * lattitudeString = station[@"latitude"];
+        NSString * longitudeString = station[@"longitude"];
+        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: lattitudeString.doubleValue longitude:longitudeString.doubleValue];        
         CLLocationDistance distance = [location distanceFromLocation:stationLocation];
         
         if (distance < shortestDistance){
@@ -152,15 +145,15 @@
         }
     }
     
+    NSLog(@"and our location... %@", self.locationManager.location);
     return nearestStation;
 }
 
 -(void) grabNearestStationToDevice{
-    NSLog(@"called");
-    CLLocationManager * locationManager = [[CLLocationManager alloc] init];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    locationManager.delegate = self;
-    [locationManager startUpdatingLocation];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.delegate = self;
+    [self.locationManager startUpdatingLocation];
     
 }
 
@@ -171,6 +164,20 @@
     
     if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:)])
         [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location]];
+    
+    [manager stopUpdatingLocation];
+    
+    NSLog(@"location manager did update location to %@", locations.lastObject);
+
+    
+}
+
+-(void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    if ([self.delegate respondsToSelector:@selector(deviceLocationNotFoundWithError:)])
+        [self.delegate deviceLocationNotFoundWithError:error];
+    
+    if (error.code == kCLErrorDenied)
+        [manager stopUpdatingLocation];
     
 }
 
