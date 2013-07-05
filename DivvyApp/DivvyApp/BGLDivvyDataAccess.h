@@ -31,9 +31,9 @@
 
 /* These properties and methods all relate to filling raw station data */
 
-// note: the data is a dictionary
-// the first entry is "executionTime" which has a timestamp of the execution
-// the second entry is "stationBeanList" which has all the relevent data
+// note: the data is a dictionary with two keys:
+// "executionTime"  has a timestamp of the execution
+// "stationBeanList"  has bike station data
 @property (strong, nonatomic) NSDictionary * stationData;
 
 // if this is set then the station data will refresh automatically every 60 seconds, and will call asynchronousFillRequestComplete
