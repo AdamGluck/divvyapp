@@ -52,8 +52,14 @@
 
 /* these properties allow you to grab particular properties as arrays of the station data */
 
+typedef enum options {
+    kNearestStationAny,
+    kNearestStationOpen,
+    kNearestStationWithBike
+} BGLDivvyNearestStationOptions;
+
 // this assumes that the station data has been filled
--(NSDictionary *) grabNearestStationTo: (CLLocation *) location;
+-(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option;
 
 // This returns the nearest station in the delegate method nearestStationToDeviceFoundWithStation:
 // It also returns the location of the nearest station, and errors if it cannot connect to the GPS in the appropriate methods

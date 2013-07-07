@@ -128,7 +128,9 @@
 
 #pragma mark - location grabbing items
 
--(NSDictionary *) grabNearestStationTo:(CLLocation *)location{
+
+
+-(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option{
     
     NSDictionary * nearestStation;
     CLLocationDistance shortestDistance;
@@ -139,7 +141,17 @@
         CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: lattitudeString.doubleValue longitude:longitudeString.doubleValue];        
         CLLocationDistance distance = [location distanceFromLocation:stationLocation];
         
-        if (distance < shortestDistance){
+        bool optionBool = YES;
+        
+        if (option == kNearestStationWithBike){
+            NSLog(@"available bikes %@", station[@"availableBikes"]);
+            optionBool = ((NSString *)station[@"availableBikes"]).intValue > 0;
+        } else if (option == kNearestStationOpen){
+            NSLog(@"available docks %@", station[@"availableDocks"]);
+            optionBool = ((NSString *) station[@"availableDocks"]).intValue > 0;
+        }
+        
+        if ((distance < shortestDistance) && optionBool){
             shortestDistance = distance;
             nearestStation = station;
         } else if (!shortestDistance){ // for the first run through
@@ -147,7 +159,6 @@
         }
     }
     
-    NSLog(@"and our location... %@", self.locationManager.location);
     return nearestStation;
 }
 
@@ -164,13 +175,10 @@
     if ([self.delegate respondsToSelector:@selector(deviceLocationFoundAtLocation:)])
         [self.delegate deviceLocationFoundAtLocation:manager.location];
     
-    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:)])
-        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location]];
+    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:withOption:)])
+        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location withOption:kNearestStationAny]];
     
     [manager stopUpdatingLocation];
-    
-    NSLog(@"location manager did update location to %@", locations.lastObject);
-
     
 }
 
