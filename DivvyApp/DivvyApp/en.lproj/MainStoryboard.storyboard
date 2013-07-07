@@ -32,21 +32,30 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2TI-gZ-K4o">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="A61-wx-LY1" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="6ka-pa-k8H"/>
-                            <constraint firstItem="weF-Gv-68C" firstAttribute="top" secondItem="3" secondAttribute="top" constant="159" id="7hr-Yo-5bE"/>
-                            <constraint firstItem="weF-Gv-68C" firstAttribute="centerX" secondItem="A61-wx-LY1" secondAttribute="centerX" type="default" id="L4i-fM-VO1"/>
+                            <constraint firstItem="weF-Gv-68C" firstAttribute="trailing" secondItem="2TI-gZ-K4o" secondAttribute="trailing" type="default" id="6Qx-Zh-JzI"/>
+                            <constraint firstItem="2TI-gZ-K4o" firstAttribute="centerX" secondItem="A61-wx-LY1" secondAttribute="centerX" type="default" id="Dea-GL-JI0"/>
+                            <constraint firstItem="2TI-gZ-K4o" firstAttribute="top" secondItem="3" secondAttribute="top" constant="67" id="ZZM-TC-MeK"/>
+                            <constraint firstItem="weF-Gv-68C" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="bd7-3K-7KR"/>
                             <constraint firstAttribute="bottom" secondItem="A61-wx-LY1" secondAttribute="bottom" constant="123" id="boD-Ed-kec"/>
+                            <constraint firstItem="2TI-gZ-K4o" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="ef0-V8-ClK"/>
+                            <constraint firstAttribute="bottom" secondItem="2TI-gZ-K4o" secondAttribute="bottom" constant="255" id="nPi-eH-eIR"/>
+                            <constraint firstItem="2TI-gZ-K4o" firstAttribute="leading" secondItem="weF-Gv-68C" secondAttribute="leading" type="default" id="so2-Bp-yHi"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="mapViewContainer" destination="2TI-gZ-K4o" id="7aR-KH-OKi"/>
                         <outlet property="nearestLocationText" destination="weF-Gv-68C" id="58q-ne-tsm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="10" y="60"/>
         </scene>
     </scenes>
     <classes>
@@ -56,6 +65,8 @@
         <class className="ViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
+                <relationship kind="action" name="nearestLocationButtonPressed:"/>
+                <relationship kind="outlet" name="mapViewContainer" candidateClass="UIView"/>
                 <relationship kind="outlet" name="nearestLocationText" candidateClass="UITextField"/>
             </relationships>
         </class>

@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "BGLDivvyDataAccess.h"
 #import <CoreLocation/CoreLocation.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 @interface ViewController () <BGLDivvyDataAccessDelegate>{
     int count;
@@ -16,10 +17,13 @@
 
 @property (strong, nonatomic) BGLDivvyDataAccess * dataAccess;
 @property (strong, nonatomic) IBOutlet UITextField *nearestLocationText;
+@property (strong, nonatomic) IBOutlet UIView *mapViewContainer;
 
 @end
 
-@implementation ViewController
+@implementation ViewController {
+    GMSMapView *mapView_;
+}
 
 - (void)viewDidLoad
 {
@@ -28,11 +32,34 @@
     self.dataAccess = [[BGLDivvyDataAccess alloc] init];
     
     self.dataAccess.delegate = self;
-    [self.dataAccess fillStationDataASynchronously];
-    
-    // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
     // for testing
+    // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
+
+    [self loadMap];
     
+
+
+    [self.dataAccess fillStationDataASynchronously];
+
+}
+
+- (void)loadMap
+{
+    NSLog(@"Loading map view");
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:10]; // Chicago (zoomed out)
+    mapView_ = [GMSMapView mapWithFrame:CGRectMake(0, 0, 200, 200) camera:camera];
+    mapView_.myLocationEnabled = YES;
+    [self.mapViewContainer addSubview:mapView_];
+}
+
+- (void)addMarkerForStation:(NSDictionary *)station
+{
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    CLLocationDegrees latitude = (CLLocationDegrees)[station[@"latitude"] floatValue];
+    CLLocationDegrees longitude = (CLLocationDegrees)[station[@"longitude"] floatValue];
+    marker.position = CLLocationCoordinate2DMake(latitude, longitude);
+    marker.title = station[@"stationName"];
+    marker.map = mapView_;
 }
 
 -(void) asynchronousFillRequestComplete: (NSArray *) data{
@@ -46,6 +73,7 @@
 -(void) nearestStationToDeviceFoundWithStation:(NSDictionary *)station{
     NSLog(@"station nearest to device %@ and name = %@", station, station[@"stationName"]);
     self.nearestLocationText.text = station[@"stationName"];
+    [self addMarkerForStation:station];
 }
 
 -(void) deviceLocationFoundAtLocation: (CLLocation *) location{
