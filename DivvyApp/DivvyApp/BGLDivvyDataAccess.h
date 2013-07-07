@@ -52,6 +52,7 @@
 
 /* these properties allow you to grab particular properties as arrays of the station data */
 
+// note the options still need some testing, looks like preliminarily that they work, though
 typedef enum options {
     kNearestStationAny,
     kNearestStationOpen,
@@ -63,7 +64,7 @@ typedef enum options {
 
 // This returns the nearest station in the delegate method nearestStationToDeviceFoundWithStation:
 // It also returns the location of the nearest station, and errors if it cannot connect to the GPS in the appropriate methods
--(void) grabNearestStationToDevice;
+-(void) grabNearestStationToDeviceWithOption: (BGLDivvyNearestStationOptions) option;
 
 
 @end

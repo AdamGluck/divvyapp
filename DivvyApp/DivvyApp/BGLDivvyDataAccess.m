@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSTimer * refreshTimer;
 @property (strong, nonatomic) CLLocationManager * locationManager;
+@property (assign, nonatomic) int selectedOption;
 
 @end
 
@@ -131,14 +132,14 @@
 
 
 -(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option{
-    
+    NSLog(@"grab nearest statino to location with option called, option == %i and stationData == %@", option, self.stationData);
     NSDictionary * nearestStation;
-    CLLocationDistance shortestDistance;
+    CLLocationDistance shortestDistance = 0;
+    
     for (NSDictionary * station in self.stationData[@"stationBeanList"]){
-                
-        NSString * lattitudeString = station[@"latitude"];
+        NSString * latitudeString = station[@"latitude"];
         NSString * longitudeString = station[@"longitude"];
-        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: lattitudeString.doubleValue longitude:longitudeString.doubleValue];        
+        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: latitudeString.doubleValue longitude:longitudeString.doubleValue];        
         CLLocationDistance distance = [location distanceFromLocation:stationLocation];
         
         bool optionBool = YES;
@@ -151,21 +152,20 @@
             optionBool = ((NSString *) station[@"availableDocks"]).intValue > 0;
         }
         
-        if ((distance < shortestDistance) && optionBool){
+        if (((distance < shortestDistance) && optionBool) || !shortestDistance){
             shortestDistance = distance;
             nearestStation = station;
-        } else if (!shortestDistance){ // for the first run through
-            shortestDistance = distance;
-        }
+        } 
     }
     
     return nearestStation;
 }
 
--(void) grabNearestStationToDevice{
+-(void) grabNearestStationToDeviceWithOption:(BGLDivvyNearestStationOptions)option{
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.delegate = self;
+    self.selectedOption = option;
     [self.locationManager startUpdatingLocation];
     
 }
@@ -175,8 +175,8 @@
     if ([self.delegate respondsToSelector:@selector(deviceLocationFoundAtLocation:)])
         [self.delegate deviceLocationFoundAtLocation:manager.location];
     
-    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:withOption:)])
-        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location withOption:kNearestStationAny]];
+    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:)])
+        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location withOption:self.selectedOption]];
     
     [manager stopUpdatingLocation];
     
