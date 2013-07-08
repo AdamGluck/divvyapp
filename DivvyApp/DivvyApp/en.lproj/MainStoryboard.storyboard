@@ -67,21 +67,27 @@
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="DIVVY BIKE SHARE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mus-cE-5iw">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="AyO-IB-vxh"/>
+                                    <constraint firstAttribute="height" constant="70" id="9SQ-nL-sds"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="30"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2zH-vI-HmI">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Location" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2zH-vI-HmI">
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="69b-Ur-zn8">
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fKY-gM-uDa">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="divvy_logo.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="ZRO-U6-zS8">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="112" id="KNl-wP-mgT"/>
+                                    <constraint firstAttribute="width" constant="116" id="eBp-MG-xb7"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fqs-9v-cHe">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="BIKE!">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -91,32 +97,26 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="getDirections:" destination="vbQ-lx-RVJ" eventType="touchUpInside" id="yUk-Wi-epM"/>
-                                    <segue destination="ER4-lV-ApI" kind="push" identifier="moveToMap" id="9he-PI-sK1"/>
+                                    <segue destination="ER4-lV-ApI" kind="push" id="WdG-V4-eoy"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="divvy_logo.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="ZRO-U6-zS8">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="112" id="0j1-dW-WNT"/>
-                                    <constraint firstAttribute="width" constant="116" id="eBp-MG-xb7"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="ZRO-U6-zS8" firstAttribute="top" secondItem="mus-cE-5iw" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="1Mi-3o-AnG"/>
-                            <constraint firstAttribute="trailing" secondItem="2zH-vI-HmI" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="GR5-ey-R4C"/>
-                            <constraint firstAttribute="bottom" secondItem="fKY-gM-uDa" secondAttribute="bottom" constant="38" id="Qsb-8R-gVo"/>
-                            <constraint firstAttribute="trailing" secondItem="mus-cE-5iw" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="c4h-Xt-ozC"/>
-                            <constraint firstItem="mus-cE-5iw" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="cG2-ci-vh9"/>
-                            <constraint firstItem="mus-cE-5iw" firstAttribute="top" secondItem="MsL-1D-2Cx" secondAttribute="top" constant="20" symbolic="YES" type="default" id="d0j-vm-glQ"/>
-                            <constraint firstItem="2zH-vI-HmI" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="def-OB-ArZ"/>
-                            <constraint firstAttribute="bottom" secondItem="69b-Ur-zn8" secondAttribute="bottom" constant="110" id="lNg-KJ-TEl"/>
-                            <constraint firstItem="69b-Ur-zn8" firstAttribute="top" secondItem="2zH-vI-HmI" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="mwQ-Us-jPr"/>
-                            <constraint firstItem="fKY-gM-uDa" firstAttribute="centerX" secondItem="69b-Ur-zn8" secondAttribute="centerX" type="default" id="nxA-yc-WeI"/>
-                            <constraint firstItem="ZRO-U6-zS8" firstAttribute="centerX" secondItem="2zH-vI-HmI" secondAttribute="centerX" type="default" id="vMH-TV-X4M"/>
-                            <constraint firstItem="69b-Ur-zn8" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="zGR-3m-0bm"/>
-                            <constraint firstAttribute="trailing" secondItem="69b-Ur-zn8" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="zmf-J4-WHD"/>
+                            <constraint firstItem="69b-Ur-zn8" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="81A-86-ehJ"/>
+                            <constraint firstItem="2zH-vI-HmI" firstAttribute="baseline" secondItem="69b-Ur-zn8" secondAttribute="baseline" type="default" id="Fd0-SD-RRu"/>
+                            <constraint firstItem="mus-cE-5iw" firstAttribute="top" secondItem="MsL-1D-2Cx" secondAttribute="top" constant="20" symbolic="YES" type="default" id="Lc2-2b-eEa"/>
+                            <constraint firstItem="ZRO-U6-zS8" firstAttribute="centerX" secondItem="2zH-vI-HmI" secondAttribute="centerX" type="default" id="Nqs-6F-ApY"/>
+                            <constraint firstItem="2zH-vI-HmI" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="R2u-SE-ugl"/>
+                            <constraint firstAttribute="trailing" secondItem="2zH-vI-HmI" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Rn8-3T-1VH"/>
+                            <constraint firstAttribute="trailing" secondItem="mus-cE-5iw" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="XsR-od-atE"/>
+                            <constraint firstItem="fqs-9v-cHe" firstAttribute="top" secondItem="69b-Ur-zn8" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ZLO-kz-xQl"/>
+                            <constraint firstAttribute="trailing" secondItem="69b-Ur-zn8" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="cg7-ks-d5F"/>
+                            <constraint firstItem="69b-Ur-zn8" firstAttribute="top" secondItem="2zH-vI-HmI" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="pgq-cF-2GT"/>
+                            <constraint firstItem="ZRO-U6-zS8" firstAttribute="top" secondItem="MsL-1D-2Cx" secondAttribute="top" constant="115" id="qRq-oh-Fxn"/>
+                            <constraint firstItem="fqs-9v-cHe" firstAttribute="centerX" secondItem="69b-Ur-zn8" secondAttribute="centerX" type="default" id="qar-zR-o3s"/>
+                            <constraint firstItem="mus-cE-5iw" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="rXv-fA-ZW5"/>
+                            <constraint firstAttribute="bottom" secondItem="fqs-9v-cHe" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="z09-tp-51J"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="M7z-q1-VXn"/>
@@ -132,7 +132,7 @@
         <!--Navigation Controller-->
         <scene sceneID="lOs-80-bwr">
             <objects>
-                <navigationController definesPresentationContext="YES" id="BGu-rz-dWR" sceneMemberID="viewController">
+                <navigationController wantsFullScreenLayout="YES" definesPresentationContext="YES" id="BGu-rz-dWR" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Z4J-Hz-Yrq">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -164,14 +164,50 @@
                             <constraint firstItem="oqh-Xg-qUf" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="ylm-4b-n7z"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="zFQ-zk-42S"/>
+                    <navigationItem key="navigationItem" id="zFQ-zk-42S">
+                        <barButtonItem key="rightBarButtonItem" title="List" id="V2J-Nx-wvT">
+                            <connections>
+                                <segue destination="ZbR-dU-Fvi" kind="push" id="MDp-Nb-hR2"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapViewContainer" destination="oqh-Xg-qUf" id="as1-fd-PAM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BxZ-DJ-OdY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="509" y="-373"/>
+            <point key="canvasLocation" x="403" y="-373"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="MrN-NI-a3b">
+            <objects>
+                <tableViewController id="ZbR-dU-Fvi" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="H4v-Ym-tDO">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="B7T-Dg-KDf">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="ZbR-dU-Fvi" id="MVt-Dz-8FZ"/>
+                            <outlet property="delegate" destination="ZbR-dU-Fvi" id="acL-Mj-e7l"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="ZkU-P0-7ES"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c71-p0-Tn4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="847" y="-373"/>
         </scene>
     </scenes>
     <resources>
@@ -183,6 +219,7 @@
             <relationships>
                 <relationship kind="action" name="getDirections:"/>
                 <relationship kind="outlet" name="endLocationInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="homeScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="startLocationInput" candidateClass="UITextField"/>
             </relationships>
         </class>

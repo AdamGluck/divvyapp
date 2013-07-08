@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DivvyHomeViewController : UIViewController
+@interface DivvyHomeViewController : UIViewController <UITextFieldDelegate>
 
 @end

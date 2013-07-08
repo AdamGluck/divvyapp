@@ -19,16 +19,25 @@
     GMSMapView *mapView_;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    [self loadMap];
+}
+
+
 
 - (void)loadMap
 {
     NSLog(@"Loading map view");
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:10]; // Chicago (zoomed out)
-    mapView_ = [GMSMapView mapWithFrame:CGRectMake(0, 0, 200, 200) camera:camera];
+    mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
     mapView_.myLocationEnabled = YES;
     [self.mapViewContainer addSubview:mapView_];
 }
 
+// Adds a Google Maps marker at a station
 - (void)addMarkerForStation:(NSDictionary *)station
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
@@ -39,25 +48,18 @@
     marker.map = mapView_;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+/* Lazy Instantiation */
+- (NSString *)startLocation
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    if (!_startLocation) _startLocation = [[NSString alloc] init];
+    return _startLocation;
 }
 
-- (void)viewDidLoad
+- (NSString *)endLocation
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    if (!_endLocation) _endLocation = [[NSString alloc] init];
+    return _endLocation;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 @end
