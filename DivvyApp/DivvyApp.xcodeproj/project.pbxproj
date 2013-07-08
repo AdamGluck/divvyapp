@@ -20,6 +20,7 @@
 		0F4CF4B81783A67700889B08 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4B71783A67700889B08 /* ViewController.m */; };
 		0F4CF4C01783A7DB00889B08 /* BGLDivvyDataAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */; };
 		0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7830178A3B3700CAC533 /* BGLStationObject.m */; };
+		0F9B7834178A631700CAC533 /* GoogleBikeRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7833178A631700CAC533 /* GoogleBikeRoute.m */; };
 		0FB6987F1783C990000E5241 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB6987E1783C990000E5241 /* CoreLocation.framework */; };
 		8DF87C1F1787541400A77764 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF87C1E1787541400A77764 /* GoogleMaps.framework */; };
 		8DF87C211787546A00A77764 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8DF87C201787546A00A77764 /* GoogleMaps.bundle */; };
@@ -60,6 +61,8 @@
 		0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLDivvyDataAccess.m; sourceTree = "<group>"; };
 		0F9B782F178A3B3700CAC533 /* BGLStationObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLStationObject.h; sourceTree = "<group>"; };
 		0F9B7830178A3B3700CAC533 /* BGLStationObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLStationObject.m; sourceTree = "<group>"; };
+		0F9B7832178A631700CAC533 /* GoogleBikeRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleBikeRoute.h; sourceTree = "<group>"; };
+		0F9B7833178A631700CAC533 /* GoogleBikeRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleBikeRoute.m; sourceTree = "<group>"; };
 		0FB6987C1783C96E000E5241 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0FB6987E1783C990000E5241 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		8DF87C1E1787541400A77764 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
@@ -154,6 +157,8 @@
 		0F4CF4A11783A67600889B08 /* DivvyApp */ = {
 			isa = PBXGroup;
 			children = (
+				0F9B7832178A631700CAC533 /* GoogleBikeRoute.h */,
+				0F9B7833178A631700CAC533 /* GoogleBikeRoute.m */,
 				0F4CF4AA1783A67600889B08 /* AppDelegate.h */,
 				0F4CF4AB1783A67600889B08 /* AppDelegate.m */,
 				0F4CF4B31783A67600889B08 /* MainStoryboard.storyboard */,
@@ -262,6 +267,7 @@
 				0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */,
 				8DF87C3E178A570700A77764 /* DivvyHomeViewController.m in Sources */,
 				8DF87C41178A572C00A77764 /* DivvyMapViewController.m in Sources */,
+				0F9B7834178A631700CAC533 /* GoogleBikeRoute.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
