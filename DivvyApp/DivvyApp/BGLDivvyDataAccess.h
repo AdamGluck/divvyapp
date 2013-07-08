@@ -54,9 +54,9 @@
 
 // note the options still need some testing, looks like preliminarily that they work, though
 typedef enum options {
-    kNearestStationAny,
-    kNearestStationOpen,
-    kNearestStationWithBike
+    kNearestStationAny, // Any station
+    kNearestStationOpen,  // Station with open spot for bike
+    kNearestStationWithBike // Station with open spot for 
 } BGLDivvyNearestStationOptions;
 
 // this assumes that the station data has been filled
