@@ -11,6 +11,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import "BGLDivvyDataAccess.h"
 #import "GoogleBikeRoute.h"
+#import "DivvyDirectionViewController.h"
 
 @interface DivvyMapViewController () <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mapViewContainer;
@@ -21,6 +22,9 @@
 
 @property (strong, nonatomic) CLLocation *startLocation;
 @property (strong, nonatomic) CLLocation *endLocation;
+
+@property (strong,nonatomic) NSMutableArray * directionsArray;
+
 @end
 
 @implementation DivvyMapViewController {
@@ -147,7 +151,13 @@
 
 
 -(void) directionsFromServer: (NSDictionary *) directionsDictionary{
-   // NSLog(@"directions = %@", directionsDictionary);
+   
+    
+    NSDictionary * routesDictionary = directionsDictionary[@"routes"][0];
+    NSDictionary * legsDictionary = routesDictionary[@"legs"][0];
+    NSLog(@"directions from server called");
+    [self.directionsArray addObject:legsDictionary];
+    
 }
 
 
@@ -191,6 +201,21 @@
         _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:100 identifier:@"Chicago"];
     }
     return _chicagoRegion;
+}
+
+-(NSMutableArray *) directionsArray{
+    
+    if (!_directionsArray){
+        _directionsArray = [[NSMutableArray alloc] init];
+    }
+    
+    return _directionsArray;
+}
+
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
+    
 }
 
 

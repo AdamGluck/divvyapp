@@ -80,6 +80,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
     url = [[url
            stringByAddingPercentEscapesUsingEncoding: NSASCIIStringEncoding] mutableCopy];
     self.directionsURL = [NSURL URLWithString:url];
+    NSLog(@"URL = %@", self.directionsURL);
     [self retrieveDirections];
 }
 

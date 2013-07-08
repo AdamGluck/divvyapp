@@ -73,11 +73,11 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Location (default current location)" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2zH-vI-HmI">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="6105 S. University, Chicago, IL" borderStyle="roundedRect" placeholder="Start Location (default current location)" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2zH-vI-HmI">
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="69b-Ur-zn8">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="420 Diversy, Chicago, IL" borderStyle="roundedRect" placeholder="End Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="69b-Ur-zn8">
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </textField>
@@ -167,7 +167,7 @@
                     <navigationItem key="navigationItem" id="zFQ-zk-42S">
                         <barButtonItem key="rightBarButtonItem" title="List" id="V2J-Nx-wvT">
                             <connections>
-                                <segue destination="ZbR-dU-Fvi" kind="push" id="MDp-Nb-hR2"/>
+                                <segue destination="ZbR-dU-Fvi" kind="push" identifier="showInstructions" id="MDp-Nb-hR2"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -179,23 +179,50 @@
             </objects>
             <point key="canvasLocation" x="403" y="-373"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Divvy Direction View Controller-->
         <scene sceneID="MrN-NI-a3b">
             <objects>
-                <tableViewController id="ZbR-dU-Fvi" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="H4v-Ym-tDO">
+                <tableViewController id="ZbR-dU-Fvi" customClass="DivvyDirectionViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="77" sectionHeaderHeight="22" sectionFooterHeight="22" id="H4v-Ym-tDO">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="B7T-Dg-KDf">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="77" id="B7T-Dg-KDf">
+                                <rect key="frame" x="0.0" y="22" width="320" height="77"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gc8-bN-Bh8">
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="48" id="1io-x8-vAH"/>
+                                                <constraint firstAttribute="width" constant="280" id="vcF-Db-ET8"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C7g-hZ-emG">
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="160" id="LWb-2n-AWk"/>
+                                                <constraint firstAttribute="height" constant="28" id="Vz7-8Q-5os"/>
+                                            </constraints>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <constraints>
+                                    <constraint firstItem="Gc8-bN-Bh8" firstAttribute="top" secondItem="B7T-Dg-KDf" secondAttribute="top" constant="3" id="Je4-8G-Y7l"/>
+                                    <constraint firstItem="C7g-hZ-emG" firstAttribute="leading" secondItem="Gc8-bN-Bh8" secondAttribute="leading" type="default" id="ODd-CM-2Rq"/>
+                                    <constraint firstItem="Gc8-bN-Bh8" firstAttribute="leading" secondItem="B7T-Dg-KDf" secondAttribute="leading" constant="19" id="f6h-EU-OY6"/>
+                                    <constraint firstAttribute="bottom" secondItem="C7g-hZ-emG" secondAttribute="bottom" constant="2" id="gkH-dB-9jX"/>
+                                </constraints>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -214,6 +241,9 @@
         <image name="divvy_logo.jpg" width="160" height="160"/>
     </resources>
     <classes>
+        <class className="DivvyDirectionViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyDirectionViewController.h"/>
+        </class>
         <class className="DivvyHomeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyHomeViewController.h"/>
             <relationships>
