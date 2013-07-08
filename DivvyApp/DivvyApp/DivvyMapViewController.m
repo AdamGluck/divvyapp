@@ -16,7 +16,8 @@
 @property (weak, nonatomic) IBOutlet UIView *mapViewContainer;
 @property (strong, nonatomic) BGLDivvyDataAccess * dataAccess;
 @property (strong, nonatomic) CLLocation * currentLocation;
-
+@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) CLRegion *chicagoRegion;
 @end
 
 @implementation DivvyMapViewController {
@@ -37,9 +38,40 @@
     
     [self.dataAccess fillStationDataSynchronously];
     [self.dataAccess grabNearestStationToDeviceWithOption:kNearestStationAny];
+    
+    [self geocodeStartAddress];
 }
 
+- (void)geocodeStartAddress
+{
+    [self.geocoder geocodeAddressString:self.startLocation
+                               inRegion:self.chicagoRegion
+                      completionHandler:^(NSArray *placemarks, NSError *error) {
+                          NSLog(@"Start geocode completed");
+                          CLLocation *startLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:startLocation withTitle:@"Start"];
+                          [self geocodeEndAddress];
+                          if (error) {
+                              NSLog(@"Error in geocoder: %@", error);
+                          }
+                      }];
+    
 
+}
+
+- (void)geocodeEndAddress
+{
+    [self.geocoder geocodeAddressString:self.endLocation
+                               inRegion:self.chicagoRegion
+                      completionHandler:^(NSArray *placemarks, NSError *error) {
+                          NSLog(@"End geocode completed");
+                          CLLocation *endLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:endLocation withTitle:@"End"];
+                          if (error) {
+                              NSLog(@"Error in geocoder: %@", error);
+                          }
+                      }];
+}
 
 - (void)loadMap
 {
@@ -61,18 +93,15 @@
     marker.map = mapView_;
 }
 
-/* Lazy Instantiation */
-- (NSString *)startLocation
+- (void)addMarkerAtLocation:(CLLocation *)location withTitle:(NSString *)title
 {
-    if (!_startLocation) _startLocation = [[NSString alloc] init];
-    return _startLocation;
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = location.coordinate;
+    marker.title = title;
+    marker.map = mapView_;
 }
 
-- (NSString *)endLocation
-{
-    if (!_endLocation) _endLocation = [[NSString alloc] init];
-    return _endLocation;
-}
+
 
 -(void) deviceLocationFoundAtLocation:(CLLocation *)deviceLocation{
     self.currentLocation = deviceLocation;
@@ -124,10 +153,33 @@
 
 
 
-- (void)didReceiveMemoryWarning
+/* Lazy Instantiation */
+- (NSString *)startLocation
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if (!_startLocation) _startLocation = [[NSString alloc] init];
+    return _startLocation;
+}
+
+- (NSString *)endLocation
+{
+    if (!_endLocation) _endLocation = [[NSString alloc] init];
+    return _endLocation;
+}
+
+- (CLGeocoder *)geocoder
+{
+    if (!_geocoder) _geocoder = [[CLGeocoder alloc] init];
+    return _geocoder;
+}
+
+- (CLRegion *)chicagoRegion
+{
+    if (!_chicagoRegion) {
+        NSLog(@"Constructing chicago region");
+        CLLocationCoordinate2D chicago = CLLocationCoordinate2DMake(41.8500, 87.6500);
+        _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:100 identifier:@"Chicago"];
+    }
+    return _chicagoRegion;
 }
 
 @end

@@ -18,9 +18,7 @@
 
 @implementation DivvyHomeViewController
 
-- (IBAction)getDirections:(id)sender {
-    // Possibly delete this method
-}
+
 
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     

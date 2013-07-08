@@ -97,7 +97,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="ER4-lV-ApI" kind="push" id="WdG-V4-eoy"/>
+                                    <segue destination="ER4-lV-ApI" kind="push" identifier="moveToMap" id="WdG-V4-eoy"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -217,9 +217,7 @@
         <class className="DivvyHomeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyHomeViewController.h"/>
             <relationships>
-                <relationship kind="action" name="getDirections:"/>
                 <relationship kind="outlet" name="endLocationInput" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="homeScrollView" candidateClass="UIScrollView"/>
                 <relationship kind="outlet" name="startLocationInput" candidateClass="UITextField"/>
             </relationships>
         </class>
