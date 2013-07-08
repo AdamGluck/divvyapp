@@ -15,7 +15,8 @@
 @optional
 
 // These delegate methods are called in response to attempts to grab data from the server
-// The names are fairly self-explanatory, although e-mail me if you have need of further clarification.
+// The names are fairly self-explanatory
+// The "data" argument is the same as self.stationList (an array of BGLStationObjects)
 // Note: asynchronousFillRequestComplete: will not be called if the request fails
 -(void) asynchronousFillRequestComplete: (NSArray *) data;
 -(void) requestFailedWithError: (NSError *) error;
