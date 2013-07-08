@@ -52,13 +52,13 @@
     [self.mapViewContainer addSubview:mapView_];
 }
 
-- (void)addMarkerForStation:(NSDictionary *)station
+- (void)addMarkerForStation:(BGLStationObject *)station
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
-    CLLocationDegrees latitude = (CLLocationDegrees)[station[@"latitude"] floatValue];
-    CLLocationDegrees longitude = (CLLocationDegrees)[station[@"longitude"] floatValue];
+    CLLocationDegrees latitude = station.latitude;
+    CLLocationDegrees longitude = station.longitude;
     marker.position = CLLocationCoordinate2DMake(latitude, longitude);
-    marker.title = station[@"stationName"];
+    marker.title = station.stationName;
     marker.map = mapView_;
 }
 
@@ -70,9 +70,8 @@
     NSLog(@"ERROR!!!");
 }
 
--(void) nearestStationToDeviceFoundWithStation:(NSDictionary *)station{
-    NSLog(@"station nearest to device %@ and name = %@", station, station[@"stationName"]);
-    self.nearestLocationText.text = station[@"stationName"];
+-(void) nearestStationToDeviceFoundWithStation:(BGLStationObject *)station{
+    self.nearestLocationText.text = station.stationName;
     [self addMarkerForStation:station];
 }
 

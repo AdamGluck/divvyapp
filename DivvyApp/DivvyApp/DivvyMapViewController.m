@@ -9,9 +9,13 @@
 #import "DivvyMapViewController.h"
 #import <CoreLocation/CoreLocation.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import "BGLDivvyDataAccess.h"
+#import "GoogleBikeRoute.h"
 
-@interface DivvyMapViewController ()
+@interface DivvyMapViewController () <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mapViewContainer;
+@property (strong, nonatomic) BGLDivvyDataAccess * dataAccess;
+@property (strong, nonatomic) CLLocation * currentLocation;
 
 @end
 
@@ -34,7 +38,7 @@
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:10]; // Chicago (zoomed out)
     mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
     mapView_.myLocationEnabled = YES;
-    [self.mapViewContainer addSubview:mapView_];
+    self.view = mapView_;
 }
 
 // Adds a Google Maps marker at a station
