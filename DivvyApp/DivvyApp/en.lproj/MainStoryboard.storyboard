@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="BGu-rz-dWR">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -9,7 +9,7 @@
             <objects>
                 <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A61-wx-LY1">
@@ -55,10 +55,143 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="10" y="60"/>
+            <point key="canvasLocation" x="1102" y="31"/>
+        </scene>
+        <!--Divvy Home View Controller-->
+        <scene sceneID="3KE-x4-DPE">
+            <objects>
+                <viewController id="vbQ-lx-RVJ" customClass="DivvyHomeViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MsL-1D-2Cx">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="DIVVY BIKE SHARE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mus-cE-5iw">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="AyO-IB-vxh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="30"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2zH-vI-HmI">
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Location" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="69b-Ur-zn8">
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fKY-gM-uDa">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="BIKE!">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="getDirections:" destination="vbQ-lx-RVJ" eventType="touchUpInside" id="yUk-Wi-epM"/>
+                                    <segue destination="ER4-lV-ApI" kind="push" identifier="moveToMap" id="9he-PI-sK1"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="divvy_logo.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="ZRO-U6-zS8">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="112" id="0j1-dW-WNT"/>
+                                    <constraint firstAttribute="width" constant="116" id="eBp-MG-xb7"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ZRO-U6-zS8" firstAttribute="top" secondItem="mus-cE-5iw" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="1Mi-3o-AnG"/>
+                            <constraint firstAttribute="trailing" secondItem="2zH-vI-HmI" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="GR5-ey-R4C"/>
+                            <constraint firstAttribute="bottom" secondItem="fKY-gM-uDa" secondAttribute="bottom" constant="38" id="Qsb-8R-gVo"/>
+                            <constraint firstAttribute="trailing" secondItem="mus-cE-5iw" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="c4h-Xt-ozC"/>
+                            <constraint firstItem="mus-cE-5iw" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="cG2-ci-vh9"/>
+                            <constraint firstItem="mus-cE-5iw" firstAttribute="top" secondItem="MsL-1D-2Cx" secondAttribute="top" constant="20" symbolic="YES" type="default" id="d0j-vm-glQ"/>
+                            <constraint firstItem="2zH-vI-HmI" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="def-OB-ArZ"/>
+                            <constraint firstAttribute="bottom" secondItem="69b-Ur-zn8" secondAttribute="bottom" constant="110" id="lNg-KJ-TEl"/>
+                            <constraint firstItem="69b-Ur-zn8" firstAttribute="top" secondItem="2zH-vI-HmI" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="mwQ-Us-jPr"/>
+                            <constraint firstItem="fKY-gM-uDa" firstAttribute="centerX" secondItem="69b-Ur-zn8" secondAttribute="centerX" type="default" id="nxA-yc-WeI"/>
+                            <constraint firstItem="ZRO-U6-zS8" firstAttribute="centerX" secondItem="2zH-vI-HmI" secondAttribute="centerX" type="default" id="vMH-TV-X4M"/>
+                            <constraint firstItem="69b-Ur-zn8" firstAttribute="leading" secondItem="MsL-1D-2Cx" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="zGR-3m-0bm"/>
+                            <constraint firstAttribute="trailing" secondItem="69b-Ur-zn8" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="zmf-J4-WHD"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="M7z-q1-VXn"/>
+                    <connections>
+                        <outlet property="endLocationInput" destination="69b-Ur-zn8" id="z4d-cG-L9o"/>
+                        <outlet property="startLocationInput" destination="2zH-vI-HmI" id="t0i-JU-qkm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V05-Cy-Cgx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-71" y="-373"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="lOs-80-bwr">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="BGu-rz-dWR" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Z4J-Hz-Yrq">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vbQ-lx-RVJ" kind="relationship" relationship="rootViewController" id="hYx-Ay-uDz"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hyC-ni-8ON" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-624" y="-545"/>
+        </scene>
+        <!--Divvy Map View Controller-->
+        <scene sceneID="SZB-1u-u02">
+            <objects>
+                <viewController id="ER4-lV-ApI" customClass="DivvyMapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="DGJ-Wd-Qom">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqh-Xg-qUf">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="3N5-up-4U5"/>
+                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" type="default" id="HrW-YO-AGL"/>
+                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="bottom" secondItem="DGJ-Wd-Qom" secondAttribute="bottom" type="default" id="sID-mh-BsE"/>
+                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="ylm-4b-n7z"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="zFQ-zk-42S"/>
+                    <connections>
+                        <outlet property="mapViewContainer" destination="oqh-Xg-qUf" id="as1-fd-PAM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BxZ-DJ-OdY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="509" y="-373"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="divvy_logo.jpg" width="160" height="160"/>
+    </resources>
     <classes>
+        <class className="DivvyHomeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyHomeViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="getDirections:"/>
+                <relationship kind="outlet" name="endLocationInput" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="startLocationInput" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="DivvyMapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapViewContainer" candidateClass="UIView"/>
+            </relationships>
+        </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
@@ -74,6 +207,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
 </document>
