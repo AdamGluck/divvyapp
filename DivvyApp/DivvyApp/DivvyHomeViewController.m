@@ -23,8 +23,8 @@
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
     if ([segue.identifier isEqualToString:@"moveToMap"]){
-        ((DivvyMapViewController *) segue.destinationViewController).startLocation = self.startLocationInput.text;
-        ((DivvyMapViewController *) segue.destinationViewController).endLocation = self.endLocationInput.text;
+        ((DivvyMapViewController *) segue.destinationViewController).startAddress = self.startLocationInput.text;
+        ((DivvyMapViewController *) segue.destinationViewController).endAddress = self.endLocationInput.text;
     }
 }
 
