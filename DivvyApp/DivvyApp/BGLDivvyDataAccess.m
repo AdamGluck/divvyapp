@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSTimer * refreshTimer;
 @property (strong, nonatomic) CLLocationManager * locationManager;
+@property (assign, nonatomic) int selectedOption;
 
 @end
 
@@ -128,33 +129,43 @@
 
 #pragma mark - location grabbing items
 
--(NSDictionary *) grabNearestStationTo:(CLLocation *)location{
-    
+
+
+-(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option{
+    NSLog(@"grab nearest statino to location with option called, option == %i and stationData == %@", option, self.stationData);
     NSDictionary * nearestStation;
-    CLLocationDistance shortestDistance;
+    CLLocationDistance shortestDistance = 0;
+    
     for (NSDictionary * station in self.stationData[@"stationBeanList"]){
-                
-        NSString * lattitudeString = station[@"latitude"];
+        NSString * latitudeString = station[@"latitude"];
         NSString * longitudeString = station[@"longitude"];
-        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: lattitudeString.doubleValue longitude:longitudeString.doubleValue];        
+        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: latitudeString.doubleValue longitude:longitudeString.doubleValue];        
         CLLocationDistance distance = [location distanceFromLocation:stationLocation];
         
-        if (distance < shortestDistance){
+        bool optionBool = YES;
+        
+        if (option == kNearestStationWithBike){
+            NSLog(@"available bikes %@", station[@"availableBikes"]);
+            optionBool = ((NSString *)station[@"availableBikes"]).intValue > 0;
+        } else if (option == kNearestStationOpen){
+            NSLog(@"available docks %@", station[@"availableDocks"]);
+            optionBool = ((NSString *) station[@"availableDocks"]).intValue > 0;
+        }
+        
+        if (((distance < shortestDistance) && optionBool) || !shortestDistance){
             shortestDistance = distance;
             nearestStation = station;
-        } else if (!shortestDistance){ // for the first run through
-            shortestDistance = distance;
-        }
+        } 
     }
     
-    NSLog(@"and our location... %@", self.locationManager.location);
     return nearestStation;
 }
 
--(void) grabNearestStationToDevice{
+-(void) grabNearestStationToDeviceWithOption:(BGLDivvyNearestStationOptions)option{
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.delegate = self;
+    self.selectedOption = option;
     [self.locationManager startUpdatingLocation];
     
 }
@@ -165,12 +176,9 @@
         [self.delegate deviceLocationFoundAtLocation:manager.location];
     
     if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:)])
-        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location]];
+        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location withOption:self.selectedOption]];
     
     [manager stopUpdatingLocation];
-    
-    NSLog(@"location manager did update location to %@", locations.lastObject);
-
     
 }
 

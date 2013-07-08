@@ -81,7 +81,7 @@
 }
 
 - (IBAction)nearestLocationButtonPressed:(id)sender {
-    [self.dataAccess grabNearestStationToDevice];
+    [self.dataAccess grabNearestStationToDeviceWithOption:kNearestStationAny];
 }
 
 - (void)didReceiveMemoryWarning
