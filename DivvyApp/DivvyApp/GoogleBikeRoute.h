@@ -19,15 +19,21 @@
 
 @interface GoogleBikeRoute : NSObject
 
-// takes an array of waypoint strings
-// formatted this way:
-//  NSString *positionString = [[NSString alloc] initWithFormat:@"%f,%f", coordinate.latitude,coordinate.longitude];
+typedef enum transportationType {
+    kTransportationTypeBiking,
+    kTransportationTypeWalking,
+    kTransportationTypePublicTransit,
+} GoogleRouteTransportationType;
+
+// takes an array of positionStrings formatted like below
+// NSString *positionString = [[NSString alloc] initWithFormat:@"%f,%f", coordinate.latitude,coordinate.longitude];
 @property (strong, nonatomic) NSArray * waypoints;
 
 // set to true if the app is using GPS to build the class
 @property (assign, nonatomic) BOOL appDoesUseGPS;
 @property (strong, nonatomic) id <GoogleBikeRouteDelegate> delegate;
 
--(void) go;
+-(void) goWithTransportationType: (GoogleRouteTransportationType) type;
+-(GoogleBikeRoute *) initWithWaypoints: (NSArray *) waypoints sensorStatus: (BOOL) sensorOn andDelegate: (id) delegate;
 
 @end
