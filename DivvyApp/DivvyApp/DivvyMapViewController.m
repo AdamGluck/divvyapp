@@ -16,47 +16,18 @@
 @property (weak, nonatomic) IBOutlet UIView *mapViewContainer;
 @property (strong, nonatomic) BGLDivvyDataAccess * dataAccess;
 @property (strong, nonatomic) CLLocation * currentLocation;
-
+@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) CLRegion *chicagoRegion;
 @end
 
 @implementation DivvyMapViewController {
     GMSMapView *mapView_;
 }
 
-
-- (void)loadMap
-{
-    NSLog(@"Loading map view");
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:10]; // Chicago (zoomed out)
-    mapView_ = [GMSMapView mapWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) camera:camera];
-    mapView_.myLocationEnabled = YES;
-    self.view = mapView_;
-}
-
-- (void)addMarkerForStation:(NSDictionary *)station
-{
-    GMSMarker *marker = [[GMSMarker alloc] init];
-    CLLocationDegrees latitude = (CLLocationDegrees)[station[@"latitude"] floatValue];
-    CLLocationDegrees longitude = (CLLocationDegrees)[station[@"longitude"] floatValue];
-    marker.position = CLLocationCoordinate2DMake(latitude, longitude);
-    marker.title = station[@"stationName"];
-    marker.map = mapView_;
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
     self.dataAccess = [[BGLDivvyDataAccess alloc] init];
     
     self.dataAccess.delegate = self;
@@ -67,7 +38,70 @@
     
     [self.dataAccess fillStationDataSynchronously];
     [self.dataAccess grabNearestStationToDeviceWithOption:kNearestStationAny];
+    
+    [self geocodeStartAddress];
 }
+
+- (void)geocodeStartAddress
+{
+    [self.geocoder geocodeAddressString:self.startLocation
+                               inRegion:self.chicagoRegion
+                      completionHandler:^(NSArray *placemarks, NSError *error) {
+                          NSLog(@"Start geocode completed");
+                          CLLocation *startLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:startLocation withTitle:@"Start"];
+                          [self geocodeEndAddress];
+                          if (error) {
+                              NSLog(@"Error in geocoder: %@", error);
+                          }
+                      }];
+    
+
+}
+
+- (void)geocodeEndAddress
+{
+    [self.geocoder geocodeAddressString:self.endLocation
+                               inRegion:self.chicagoRegion
+                      completionHandler:^(NSArray *placemarks, NSError *error) {
+                          NSLog(@"End geocode completed");
+                          CLLocation *endLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:endLocation withTitle:@"End"];
+                          if (error) {
+                              NSLog(@"Error in geocoder: %@", error);
+                          }
+                      }];
+}
+
+- (void)loadMap
+{
+    NSLog(@"Loading map view");
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:10]; // Chicago (zoomed out)
+    mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
+    mapView_.myLocationEnabled = YES;
+    self.view = mapView_;
+}
+
+// Adds a Google Maps marker at a station
+- (void)addMarkerForStation:(NSDictionary *)station
+{
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    CLLocationDegrees latitude = (CLLocationDegrees)[station[@"latitude"] floatValue];
+    CLLocationDegrees longitude = (CLLocationDegrees)[station[@"longitude"] floatValue];
+    marker.position = CLLocationCoordinate2DMake(latitude, longitude);
+    marker.title = station[@"stationName"];
+    marker.map = mapView_;
+}
+
+- (void)addMarkerAtLocation:(CLLocation *)location withTitle:(NSString *)title
+{
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = location.coordinate;
+    marker.title = title;
+    marker.map = mapView_;
+}
+
+
 
 -(void) deviceLocationFoundAtLocation:(CLLocation *)deviceLocation{
     self.currentLocation = deviceLocation;
@@ -119,10 +153,33 @@
 
 
 
-- (void)didReceiveMemoryWarning
+/* Lazy Instantiation */
+- (NSString *)startLocation
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if (!_startLocation) _startLocation = [[NSString alloc] init];
+    return _startLocation;
+}
+
+- (NSString *)endLocation
+{
+    if (!_endLocation) _endLocation = [[NSString alloc] init];
+    return _endLocation;
+}
+
+- (CLGeocoder *)geocoder
+{
+    if (!_geocoder) _geocoder = [[CLGeocoder alloc] init];
+    return _geocoder;
+}
+
+- (CLRegion *)chicagoRegion
+{
+    if (!_chicagoRegion) {
+        NSLog(@"Constructing chicago region");
+        CLLocationCoordinate2D chicago = CLLocationCoordinate2DMake(41.8500, 87.6500);
+        _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:100 identifier:@"Chicago"];
+    }
+    return _chicagoRegion;
 }
 
 @end
