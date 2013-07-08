@@ -18,8 +18,6 @@
 
 @implementation DivvyHomeViewController
 
-#define kOFFSET_FOR_KEYBOARD 80.0
-
 - (IBAction)getDirections:(id)sender {
     // Possibly delete this method
 }
