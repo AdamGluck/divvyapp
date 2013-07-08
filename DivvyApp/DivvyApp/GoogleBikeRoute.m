@@ -50,6 +50,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 
 
 - (void)setDirectionsQuery:(NSDictionary *)query{
+    NSLog(@"query = %@", query);
     self.waypoints = [query objectForKey:@"waypoints"];
     NSString *origin = [self.waypoints objectAtIndex:0];
     int waypointCount = [self.waypoints count];
@@ -89,7 +90,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
                           options:kNilOptions
                           error:&error];
     
-    if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)]){
+    if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)] && json){
         [self buildPolyline:json];
     }
     
