@@ -18,6 +18,9 @@
 @property (strong, nonatomic) CLLocation * currentLocation;
 @property (strong, nonatomic) CLGeocoder *geocoder;
 @property (strong, nonatomic) CLRegion *chicagoRegion;
+
+@property (strong, nonatomic) CLLocation *startLocation;
+@property (strong, nonatomic) CLLocation *endLocation;
 @end
 
 @implementation DivvyMapViewController {
@@ -44,12 +47,12 @@
 
 - (void)geocodeStartAddress
 {
-    [self.geocoder geocodeAddressString:self.startLocation
+    [self.geocoder geocodeAddressString:self.startAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
                           NSLog(@"Start geocode completed");
-                          CLLocation *startLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:startLocation withTitle:@"Start"];
+                          self.startLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
                           [self geocodeEndAddress];
                           if (error) {
                               NSLog(@"Error in geocoder: %@", error);
@@ -61,16 +64,28 @@
 
 - (void)geocodeEndAddress
 {
-    [self.geocoder geocodeAddressString:self.endLocation
+    [self.geocoder geocodeAddressString:self.endAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
                           NSLog(@"End geocode completed");
-                          CLLocation *endLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:endLocation withTitle:@"End"];
+                          self.endLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
+                          [self findStations];
                           if (error) {
                               NSLog(@"Error in geocoder: %@", error);
                           }
                       }];
+}
+
+- (void)findStations
+{
+    BGLStationObject *pickupBikeStation = [self.dataAccess grabNearestStationTo:self.startLocation withOption:kNearestStationWithBike];
+    
+    BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
+    
+    [self addMarkerForStation:pickupBikeStation];
+    [self addMarkerForStation:dropoffBikeStation];
+    
 }
 
 - (void)loadMap
@@ -83,13 +98,13 @@
 }
 
 // Adds a Google Maps marker at a station
-- (void)addMarkerForStation:(NSDictionary *)station
+- (void)addMarkerForStation:(BGLStationObject *)station
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
-    CLLocationDegrees latitude = (CLLocationDegrees)[station[@"latitude"] floatValue];
-    CLLocationDegrees longitude = (CLLocationDegrees)[station[@"longitude"] floatValue];
+    CLLocationDegrees latitude = station.latitude; 
+    CLLocationDegrees longitude = station.longitude; 
     marker.position = CLLocationCoordinate2DMake(latitude, longitude);
-    marker.title = station[@"stationName"];
+    marker.title = station.stationName; 
     marker.map = mapView_;
 }
 
@@ -137,15 +152,27 @@
 
 
 /* Lazy Instantiation */
-- (NSString *)startLocation
+- (NSString *)startAddress
 {
-    if (!_startLocation) _startLocation = [[NSString alloc] init];
+    if (!_startAddress) _startAddress = [[NSString alloc] init];
+    return _startAddress;
+}
+
+- (NSString *)endAddress
+{
+    if (!_endAddress) _endAddress = [[NSString alloc] init];
+    return _endAddress;
+}
+
+- (CLLocation *)startLocation
+{
+    if (!_startLocation) _startLocation = [[CLLocation alloc] init];
     return _startLocation;
 }
 
-- (NSString *)endLocation
+- (CLLocation *)endLocation
 {
-    if (!_endLocation) _endLocation = [[NSString alloc] init];
+    if (!_endLocation) _endLocation = [[CLLocation alloc] init];
     return _endLocation;
 }
 
@@ -164,5 +191,7 @@
     }
     return _chicagoRegion;
 }
+
+
 
 @end
