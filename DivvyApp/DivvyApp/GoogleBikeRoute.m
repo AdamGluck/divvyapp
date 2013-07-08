@@ -129,7 +129,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
             polylineColor = [UIColor colorWithRed:0 green:100/255.0 blue:0.0 alpha:1.0f];
         
         polyline.strokeColor = polylineColor;
-        polyline.strokeWidth = 3.0f;
+        polyline.strokeWidth = 4.0f;
         
         [self.delegate routeWithPolyline:polyline];
     }

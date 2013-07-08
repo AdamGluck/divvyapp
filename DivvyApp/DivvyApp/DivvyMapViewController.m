@@ -83,6 +83,20 @@
     
     BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
     
+    NSString * startLocationString = [[NSString alloc] initWithFormat:@"%f,%f", self.startLocation.coordinate.latitude, self.startLocation.coordinate.longitude];
+    NSString * pickupBikeStationString = [[NSString alloc] initWithFormat:@"%f,%f", pickupBikeStation.latitude, pickupBikeStation.longitude];
+    NSString * dropoffBikeStationString = [[NSString alloc] initWithFormat:@"%f,%f", dropoffBikeStation.latitude, dropoffBikeStation.longitude];
+    NSString * endLocationString = [[NSString alloc] initWithFormat:@"%f,%f", self.endLocation.coordinate.latitude, self.endLocation.coordinate.longitude];
+    
+    GoogleBikeRoute * routeFromStartLocationToPickUpBikeStation = [[GoogleBikeRoute alloc] initWithWaypoints:@[startLocationString, pickupBikeStationString] sensorStatus:YES andDelegate:self];
+    [routeFromStartLocationToPickUpBikeStation goWithTransportationType:kTransportationTypeWalking];
+    
+    GoogleBikeRoute * routeFromPickUpBikeStationToDropOffBikeStation = [[GoogleBikeRoute alloc] initWithWaypoints:@[pickupBikeStationString, dropoffBikeStationString] sensorStatus:YES andDelegate:self];
+    [routeFromPickUpBikeStationToDropOffBikeStation goWithTransportationType:kTransportationTypeBiking];
+    
+    GoogleBikeRoute * routeFromDropOffToEndDestination = [[GoogleBikeRoute alloc] initWithWaypoints:@[dropoffBikeStationString, endLocationString] sensorStatus:YES andDelegate:self];
+    [routeFromDropOffToEndDestination goWithTransportationType:kTransportationTypeWalking];
+    
     [self addMarkerForStation:pickupBikeStation];
     [self addMarkerForStation:dropoffBikeStation];
     
@@ -123,19 +137,6 @@
 }
 
 -(void) nearestStationToDeviceFoundWithStation: (BGLStationObject *) station{
-        
-    NSString *positionString1 = [[NSString alloc] initWithFormat:@"%f,%f", self.currentLocation.coordinate.latitude,self.currentLocation.coordinate.longitude];
-    
-    NSString *positionString2 = [[NSString alloc] initWithFormat:@"%f,%f", station.latitude,station.longitude];
-    
-
-    NSArray * waypoints = @[positionString1, positionString2];
-    GoogleBikeRoute * route = [[GoogleBikeRoute alloc] init];
-    
-    route.waypoints = [waypoints copy];
-    route.appDoesUseGPS = YES;
-    route.delegate = self;
-    [route goWithTransportationType:kTransportationTypeBiking];
      
 
 }
