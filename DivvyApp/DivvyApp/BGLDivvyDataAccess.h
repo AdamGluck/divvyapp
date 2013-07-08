@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "BGLStationObject.h"
+
 @protocol BGLDivvyDataAccessDelegate <NSObject>
 
 @optional
@@ -35,6 +37,9 @@
 // "executionTime"  has a timestamp of the execution
 // "stationBeanList"  has bike station data
 @property (strong, nonatomic) NSDictionary * stationData;
+
+// this is an array of station objects
+@property (strong, nonatomic) NSArray * stationList;
 
 // if this is set then the station data will refresh automatically every 60 seconds, and will call asynchronousFillRequestComplete
 // note that as soon as this method is set it begins to refresh, so setting this will also call fillStationDataASynchronously

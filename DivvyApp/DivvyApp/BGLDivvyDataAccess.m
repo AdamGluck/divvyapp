@@ -94,17 +94,37 @@
 
 -(void) fillStationDataASynchronously{
     __block NSDictionary * blockStationData;
+    __block NSMutableArray * blockStationList = [[NSMutableArray alloc] init];
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("Grab Divvy Data", NULL);
     dispatch_async(downloadQueue, ^{
+        
         NSURL * url = [[NSURL alloc] initWithString:@"http://divvybikes.com/stations/json"];
         blockStationData = [self myGetRequest:url];
+        
+        if ([[blockStationData allKeys] count] != 0){
+            
+            for (NSDictionary * stationDictionary in blockStationData[@"stationBeanList"]){
+                BGLStationObject * station = [[BGLStationObject alloc] initWithStationDictionary:stationDictionary];
+                [blockStationList addObject:station];
+            }
+            
+        } else {
+            blockStationData = @{@"error": @"use error delegate method for more information"};
+            [blockStationList addObject:[blockStationData copy]];
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([[blockStationData allKeys] count] != 0)
-                self.stationData = blockStationData;
-            else
-                self.stationData = @{@"error": @"use error delegate method for more information"};
+            self.stationData = blockStationData;
+            self.stationList = blockStationList;
+            
+            /*
+             *** This is testing code that I am saving because it is a pain in the ass to type out ***
+            for (BGLStationObject * station in self.stationList){
+                NSLog(@"station.availableBikes == %i, station.availableDocks = %i, station.stationID = %i, station.latitude == %f, station.longitude == %f, station.location == %@, station.statusKey == %i, station.statusValue = %@, station.totalDocks = %i, station.stationName == %@", station.availableBikes, station.availableDocks, station.stationID, station.latitude, station.longitude, station.location, station.statusKey, station.statusValue, station.totalDocks, station.stationName);
+            }
+             */
             
             if ([[blockStationData allKeys] count] != 0 && [self.delegate respondsToSelector:@selector(asynchronousFillRequestComplete:)]){
                 [self.delegate asynchronousFillRequestComplete: self.stationData];
@@ -132,7 +152,7 @@
 
 
 -(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option{
-    NSLog(@"grab nearest statino to location with option called, option == %i and stationData == %@", option, self.stationData);
+    
     NSDictionary * nearestStation;
     CLLocationDistance shortestDistance = 0;
     

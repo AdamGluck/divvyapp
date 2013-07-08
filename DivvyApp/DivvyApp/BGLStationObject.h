@@ -26,6 +26,8 @@
 @property (assign, nonatomic) NSInteger statusKey; // 1 indicates "In Service"
 @property (strong, nonatomic) NSString * statusValue; // "In Service" indicates "In Service"
 
+-(BGLStationObject *) initWithStationDictionary: (NSDictionary *) stationData;
+
 
 
 @end
