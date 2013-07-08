@@ -260,6 +260,8 @@
 				0F4CF4B81783A67700889B08 /* ViewController.m in Sources */,
 				0F4CF4C01783A7DB00889B08 /* BGLDivvyDataAccess.m in Sources */,
 				0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */,
+				8DF87C3E178A570700A77764 /* DivvyHomeViewController.m in Sources */,
+				8DF87C41178A572C00A77764 /* DivvyMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
