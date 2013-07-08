@@ -181,7 +181,6 @@
         <class className="DivvyHomeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyHomeViewController.h"/>
             <relationships>
-                <relationship kind="action" name="getDirections:"/>
                 <relationship kind="outlet" name="endLocationInput" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="startLocationInput" candidateClass="UITextField"/>
             </relationships>
