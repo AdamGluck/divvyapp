@@ -86,15 +86,28 @@
 
 #pragma mark - fill data methods
 
+-(NSArray *) downloadedDataSetToStationList: (NSDictionary *) divvyDataDictionary{
+    
+    NSMutableArray * localStationList = [[NSMutableArray alloc] init];
+    
+    for (NSDictionary * stationDictionary in divvyDataDictionary[@"stationBeanList"]){
+        BGLStationObject * station = [[BGLStationObject alloc] initWithStationDictionary:stationDictionary];
+        [localStationList addObject:station];
+    }
+    
+    return [localStationList copy];
+}
+
 -(void) fillStationDataSynchronously{
     NSString * requestString = [[NSString alloc] initWithFormat:@"https://divvybikes.com/stations/json"];
     NSURL * url = [[NSURL alloc] initWithString:requestString];
     self.stationData = [self myGetRequest:url];
+    self.stationList = [self downloadedDataSetToStationList:self.stationData];
 }
 
 -(void) fillStationDataASynchronously{
     __block NSDictionary * blockStationData;
-    __block NSMutableArray * blockStationList = [[NSMutableArray alloc] init];
+    __block NSArray * blockStationList = [[NSArray alloc] init];
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("Grab Divvy Data", NULL);
     dispatch_async(downloadQueue, ^{
@@ -104,14 +117,11 @@
         
         if ([[blockStationData allKeys] count] != 0){
             
-            for (NSDictionary * stationDictionary in blockStationData[@"stationBeanList"]){
-                BGLStationObject * station = [[BGLStationObject alloc] initWithStationDictionary:stationDictionary];
-                [blockStationList addObject:station];
-            }
+            blockStationList = [self downloadedDataSetToStationList:blockStationData];
             
         } else {
             blockStationData = @{@"error": @"use error delegate method for more information"};
-            [blockStationList addObject:[blockStationData copy]];
+            blockStationList = @[@"Error: Use error delegate method for more information"];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -119,15 +129,8 @@
             self.stationData = blockStationData;
             self.stationList = blockStationList;
             
-            /*
-             *** This is testing code that I am saving because it is a pain in the ass to type out ***
-            for (BGLStationObject * station in self.stationList){
-                NSLog(@"station.availableBikes == %i, station.availableDocks = %i, station.stationID = %i, station.latitude == %f, station.longitude == %f, station.location == %@, station.statusKey == %i, station.statusValue = %@, station.totalDocks = %i, station.stationName == %@", station.availableBikes, station.availableDocks, station.stationID, station.latitude, station.longitude, station.location, station.statusKey, station.statusValue, station.totalDocks, station.stationName);
-            }
-             */
-            
             if ([[blockStationData allKeys] count] != 0 && [self.delegate respondsToSelector:@selector(asynchronousFillRequestComplete:)]){
-                [self.delegate asynchronousFillRequestComplete: self.stationData];
+                [self.delegate asynchronousFillRequestComplete: self.stationList];
             }
             
         });
@@ -150,26 +153,22 @@
 #pragma mark - location grabbing items
 
 
-
--(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option{
+-(BGLStationObject *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option{
     
-    NSDictionary * nearestStation;
+    BGLStationObject * nearestStation;
     CLLocationDistance shortestDistance = 0;
     
-    for (NSDictionary * station in self.stationData[@"stationBeanList"]){
-        NSString * latitudeString = station[@"latitude"];
-        NSString * longitudeString = station[@"longitude"];
-        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: latitudeString.doubleValue longitude:longitudeString.doubleValue];        
+    for (BGLStationObject * station in self.stationList){
+        
+        CLLocation * stationLocation = [[CLLocation alloc] initWithLatitude: station.latitude longitude:station.longitude];
         CLLocationDistance distance = [location distanceFromLocation:stationLocation];
         
         bool optionBool = YES;
         
         if (option == kNearestStationWithBike){
-            NSLog(@"available bikes %@", station[@"availableBikes"]);
-            optionBool = ((NSString *)station[@"availableBikes"]).intValue > 0;
+            optionBool = station.availableBikes > 0;
         } else if (option == kNearestStationOpen){
-            NSLog(@"available docks %@", station[@"availableDocks"]);
-            optionBool = ((NSString *) station[@"availableDocks"]).intValue > 0;
+            optionBool = station.availableDocks > 0;
         }
         
         if (((distance < shortestDistance) && optionBool) || !shortestDistance){
@@ -212,14 +211,12 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
 @end
+
+
+/*
+ *** This is testing code that I am saving because it is a pain in the ass to type out ***
+ for (BGLStationObject * station in self.stationList){
+ NSLog(@"station.availableBikes == %i, station.availableDocks = %i, station.stationID = %i, station.latitude == %f, station.longitude == %f, station.location == %@, station.statusKey == %i, station.statusValue = %@, station.totalDocks = %i, station.stationName == %@", station.availableBikes, station.availableDocks, station.stationID, station.latitude, station.longitude, station.location, station.statusKey, station.statusValue, station.totalDocks, station.stationName);
+ }
+ */

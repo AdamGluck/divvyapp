@@ -17,13 +17,13 @@
 // These delegate methods are called in response to attempts to grab data from the server
 // The names are fairly self-explanatory, although e-mail me if you have need of further clarification.
 // Note: asynchronousFillRequestComplete: will not be called if the request fails
--(void) asynchronousFillRequestComplete: (NSDictionary *) data;
+-(void) asynchronousFillRequestComplete: (NSArray *) data;
 -(void) requestFailedWithError: (NSError *) error;
 
 // Names here are self explanatory again, are called in response to grabNearestStationToDevice being called.
 -(void) deviceLocationFoundAtLocation: (CLLocation *) deviceLocation;
 -(void) deviceLocationNotFoundWithError: (NSError *) error;
--(void) nearestStationToDeviceFoundWithStation: (NSDictionary *) station;
+-(void) nearestStationToDeviceFoundWithStation: (BGLStationObject *) station;
 
 @end
 
@@ -36,6 +36,8 @@
 // note: the data is a dictionary with two keys:
 // "executionTime"  has a timestamp of the execution
 // "stationBeanList"  has bike station data
+// Note: more data is stored in each dictionary in the stationBeanList than is stored in an average BGLStationObject, might be worth looking at for people who are more interested in the available data set
+// Try just typing NSLog(@"%@", object.stationData) in viewDidLoad after filling in order to see a textual representation of the stationData
 @property (strong, nonatomic) NSDictionary * stationData;
 
 // this is an array of station objects
@@ -65,7 +67,7 @@ typedef enum options {
 } BGLDivvyNearestStationOptions;
 
 // this assumes that the station data has been filled
--(NSDictionary *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option;
+-(BGLStationObject *) grabNearestStationTo:(CLLocation *)location withOption: (BGLDivvyNearestStationOptions) option;
 
 // This returns the nearest station in the delegate method nearestStationToDeviceFoundWithStation:
 // It also returns the location of the nearest station, and errors if it cannot connect to the GPS in the appropriate methods
