@@ -26,14 +26,17 @@ typedef enum transportationType {
 } GoogleRouteTransportationType;
 
 // takes an array of positionStrings formatted like below
-// NSString *positionString = [[NSString alloc] initWithFormat:@"%f,%f", coordinate.latitude,coordinate.longitude];
+// NSString *positionStringExample = [[NSString alloc] initWithFormat:@"%f,%f", coordinate.latitude,coordinate.longitude];
 @property (strong, nonatomic) NSArray * waypoints;
 
-// set to true if the app is using GPS to build the class
+// set to true if the app is using GPS
 @property (assign, nonatomic) BOOL appDoesUseGPS;
 @property (strong, nonatomic) id <GoogleBikeRouteDelegate> delegate;
 
+// press once the waypoint are set
+// calls both delegate methods
 -(void) goWithTransportationType: (GoogleRouteTransportationType) type;
+
 -(GoogleBikeRoute *) initWithWaypoints: (NSArray *) waypoints sensorStatus: (BOOL) sensorOn andDelegate: (id) delegate;
 
 @end
