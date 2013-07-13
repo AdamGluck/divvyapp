@@ -152,32 +152,49 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqh-Xg-qUf">
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="38" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-8N-pNX">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="223" id="jqg-Xw-q9T"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="enterLocationCell" rowHeight="38" id="bQK-o9-XuJ">
+                                        <rect key="frame" x="0.0" y="22" width="280" height="38"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="280" height="37"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="ER4-lV-ApI" id="mn6-xd-JXD"/>
+                                    <outlet property="delegate" destination="ER4-lV-ApI" id="a0Y-Gh-qMe"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="3N5-up-4U5"/>
-                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" type="default" id="HrW-YO-AGL"/>
-                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="bottom" secondItem="DGJ-Wd-Qom" secondAttribute="bottom" type="default" id="sID-mh-BsE"/>
-                            <constraint firstItem="oqh-Xg-qUf" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="ylm-4b-n7z"/>
+                            <constraint firstAttribute="trailing" secondItem="qcZ-8N-pNX" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="45e-QZ-Tex"/>
+                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" constant="11" id="Ef4-3o-c61"/>
+                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="OO7-0K-ngD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zFQ-zk-42S">
-                        <barButtonItem key="rightBarButtonItem" title="List" id="V2J-Nx-wvT">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="V2J-Nx-wvT">
                             <connections>
                                 <segue destination="ZbR-dU-Fvi" kind="push" identifier="showInstructions" id="MDp-Nb-hR2"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="mapViewContainer" destination="oqh-Xg-qUf" id="as1-fd-PAM"/>
+                        <outlet property="enterInstructionsView" destination="qcZ-8N-pNX" id="PX2-la-MBQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BxZ-DJ-OdY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="403" y="-373"/>
+            <point key="canvasLocation" x="407" y="-373"/>
         </scene>
         <!--Divvy Direction View Controller-->
         <scene sceneID="MrN-NI-a3b">
@@ -254,7 +271,7 @@
         <class className="DivvyMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="mapViewContainer" candidateClass="UIView"/>
+                <relationship kind="outlet" name="enterInstructionsView" candidateClass="UITableView"/>
             </relationships>
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">

@@ -13,8 +13,7 @@
 #import "GoogleBikeRoute.h"
 #import "DivvyDirectionViewController.h"
 
-@interface DivvyMapViewController () <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate>
-@property (weak, nonatomic) IBOutlet UIView *mapViewContainer;
+@interface DivvyMapViewController () <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) BGLDivvyDataAccess * dataAccess;
 @property (strong, nonatomic) CLLocation * currentLocation;
 @property (strong, nonatomic) CLGeocoder *geocoder;
@@ -24,6 +23,7 @@
 @property (strong, nonatomic) CLLocation *endLocation;
 
 @property (strong,nonatomic) NSMutableArray * directionsArray;
+@property (strong, nonatomic) IBOutlet UITableView *enterInstructionsView;
 
 @end
 
@@ -43,11 +43,25 @@
     
     [self loadMap];
     
-    [self.dataAccess fillStationDataSynchronously];
-    [self.dataAccess grabNearestStationToDeviceWithOption:kNearestStationAny];
+    [self configureTableView];
     
+    [self.dataAccess fillStationDataASynchronously];
+    
+}
+
+#pragma mark - DivvyDataAccessDelegate
+
+-(void) asynchronousFillRequestComplete: (NSArray *) data{
+    [self.dataAccess grabNearestStationToDeviceWithOption:kNearestStationAny];
     [self geocodeStartAddress];
 }
+
+-(void) nearestStationToDeviceFoundWithStation:(BGLStationObject *)station fromDeviceLocation:(CLLocation *) deviceLocation {
+    
+    self.currentLocation = deviceLocation;
+}
+
+#pragma mark - Geocoding functions
 
 - (void)geocodeStartAddress
 {
@@ -106,13 +120,19 @@
     
 }
 
+#pragma mark - map drawing functions
 - (void)loadMap
 {
+    NSLog(@"initial self.view.subviews = %@", self.view.subviews);
+
     NSLog(@"Loading map view");
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:10]; // Chicago (zoomed out)
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:12]; // Chicago (zoomed out)
     mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
     mapView_.myLocationEnabled = YES;
-    self.view = mapView_;
+    
+    //self.view = mapView_;
+    [self.view insertSubview:mapView_ atIndex:0];
+    NSLog(@"mapkit subviews = %@ or %@", self.view.subviews, mapView_.subviews);
 }
 
 // Adds a Google Maps marker at a station
@@ -135,15 +155,7 @@
 }
 
 
-
--(void) deviceLocationFoundAtLocation:(CLLocation *)deviceLocation{
-    self.currentLocation = deviceLocation;
-}
-
--(void) nearestStationToDeviceFoundWithStation: (BGLStationObject *) station{
-     
-
-}
+#pragma mark - GoogleBikeRouteDelegate functions
 
 -(void) routeWithPolyline: (GMSPolyline *) polyline{
     polyline.map = mapView_;
@@ -152,7 +164,6 @@
 
 -(void) directionsFromServer: (NSDictionary *) directionsDictionary{
    
-    
     NSDictionary * routesDictionary = directionsDictionary[@"routes"][0];
     NSDictionary * legsDictionary = routesDictionary[@"legs"][0];
     NSLog(@"directions from server called");
@@ -161,8 +172,8 @@
 }
 
 
+#pragma mark - Lazy Instantiations
 
-/* Lazy Instantiation */
 - (NSString *)startAddress
 {
     if (!_startAddress) _startAddress = [[NSString alloc] init];
@@ -212,10 +223,54 @@
     return _directionsArray;
 }
 
+#pragma mark - Storyboard Functions
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
-    ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
+    if ([self.directionsArray count])
+        ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
     
+}
+
+#pragma mark - UITableView Configuration
+
+-(void) configureTableView{
+    self.enterInstructionsView.backgroundColor = [UIColor clearColor];
+    
+}
+
+
+#pragma mark - UITableViewDelegate Functions
+
+
+
+#pragma mark - UITableViewDataSourceDelegate Functions
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    NSLog(@"number of sections in tableview called");
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSLog(@"numer of rows in section called");
+    // Return the number of rows in the section.
+    return 1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"tableview allocated");
+    static NSString *CellIdentifier = @"enterLocationCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    UIImageView * backGroundView = [[UIImageView alloc] initWithFrame:cell.frame];
+    backGroundView.backgroundColor = [UIColor blackColor];
+    backGroundView.alpha = .6f;
+    cell.backgroundView = backGroundView;
+    
+    return cell;
 }
 
 
