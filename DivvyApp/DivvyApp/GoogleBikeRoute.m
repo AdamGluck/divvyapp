@@ -59,6 +59,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
     else
         return @"bicycling";
 }
+
 - (void)setDirectionsQuery:(NSDictionary *)query{
     self.waypoints = [query objectForKey:@"waypoints"];
     NSString *origin = [self.waypoints objectAtIndex:0];
@@ -112,7 +113,8 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 
 - (void)buildPolyline:(NSDictionary *)json {
     
-    if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)]){
+    if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)] && [json[@"routes"] count]){
+        
         NSDictionary *routes = [json objectForKey:@"routes"][0];
         
         NSDictionary *route = [routes objectForKey:@"overview_polyline"];

@@ -80,7 +80,6 @@
         
     }
     
-    
 }
 
 
@@ -114,7 +113,8 @@
         
         NSURL * url = [[NSURL alloc] initWithString:@"http://divvybikes.com/stations/json"];
         blockStationData = [self myGetRequest:url];
-        
+        self.stationData = @{@"does this work": @"does it?"};
+
         if ([[blockStationData allKeys] count] != 0){
             
             blockStationList = [self downloadedDataSetToStationList:blockStationData];
@@ -174,7 +174,7 @@
         if (((distance < shortestDistance) && optionBool) || !shortestDistance){
             shortestDistance = distance;
             nearestStation = station;
-        } 
+        }
     }
     
     return nearestStation;
@@ -189,13 +189,11 @@
     
 }
 
+
 -(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     
-    if ([self.delegate respondsToSelector:@selector(deviceLocationFoundAtLocation:)])
-        [self.delegate deviceLocationFoundAtLocation:manager.location];
-    
-    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:)])
-        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location withOption:self.selectedOption]];
+    if ([self.delegate respondsToSelector:@selector(nearestStationToDeviceFoundWithStation:fromDeviceLocation:)])
+        [self.delegate nearestStationToDeviceFoundWithStation:[self grabNearestStationTo:manager.location withOption:self.selectedOption] fromDeviceLocation:manager.location];
     
     [manager stopUpdatingLocation];
     

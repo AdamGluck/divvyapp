@@ -22,10 +22,8 @@
 -(void) requestFailedWithError: (NSError *) error;
 
 // Names here are self explanatory again, are called in response to grabNearestStationToDevice being called.
-// Note: deviceLocationFoundAtLocation is called before nearestStationToDeviceFoundWithStation
--(void) deviceLocationFoundAtLocation: (CLLocation *) deviceLocation;
 -(void) deviceLocationNotFoundWithError: (NSError *) error;
--(void) nearestStationToDeviceFoundWithStation: (BGLStationObject *) station;
+-(void) nearestStationToDeviceFoundWithStation: (BGLStationObject *) station fromDeviceLocation: (CLLocation *) deviceLocation;
 
 @end
 
@@ -74,6 +72,7 @@ typedef enum options {
 // This returns the nearest station in the delegate method nearestStationToDeviceFoundWithStation:
 // It also returns the location of the nearest station, and errors if it cannot connect to the GPS in the appropriate methods
 -(void) grabNearestStationToDeviceWithOption: (BGLDivvyNearestStationOptions) option;
+
 
 
 @end
