@@ -63,10 +63,10 @@
     [self loadMap];
     [self configureTableView];
     
-    /*[[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidShow:)
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow)
                                                  name:UIKeyboardDidShowNotification
-                                               object:nil];*/
+                                               object:nil];
     
     [self.dataAccess fillStationDataASynchronously]; // so we can use this data later
     
@@ -118,13 +118,12 @@
                           NSLog(@"End geocode completed");
                           
                           self.endLocation = ((CLPlacemark *)placemarks[0]).location;
-                          
+                          [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
                           if (error) {
                               NSLog(@"Error in geocode end address: %@", error);
                               UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Try again" message:@"Couldn't get directions from server, make sure you entered the address correctly." delegate:self cancelButtonTitle:@"Will do!" otherButtonTitles: nil];
                               [alert show];
                           } else {
-                              [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
                               [self findStations];
                           }
                       }];
@@ -223,6 +222,7 @@
 #pragma mark - GoogleBikeRouteDelegate functions
 
 -(void) routeWithPolyline: (GMSPolyline *) polyline{
+    
     polyline.map = mapView_;
     
     if (++polylineCount == 3) {
@@ -241,6 +241,9 @@
         NSDictionary * routesDictionary = routesArray[0];
         NSDictionary * legsDictionary = routesDictionary[@"legs"][0];
         [self.directionsArray addObject:legsDictionary];
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Where?" message:@"There was an error finding part of your route, make sure you entered the address correctly and try again" delegate:self cancelButtonTitle:@"I'll try again." otherButtonTitles: nil];
+        [alert show];
     }
     
 }
@@ -306,9 +309,15 @@
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
         cell.textLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
         cell.userInteractionEnabled = YES;
+        
+        
     } else {
         cell.textLabel.text = @"";
         cell.userInteractionEnabled = NO;
+        
+        UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss:)];
+        tap.delegate = self;
+        [cell addGestureRecognizer:tap];
     }
     
     
@@ -343,32 +352,41 @@
         NSLog(@"end address: %@", self.endLocationField.text);
         self.endAddress = self.endLocationField.text;
         [self geocodeStartAddress];
-        
     } 
 }
 
 
 #pragma mark - UITextField Delegate 
 
+-(void) makeStartFieldCurrentLocation{
+    self.startLocationField.text = @"Current Location";
+    self.startLocationField.textColor = [UIColor blueColor];
+}
+
 -(void) textFieldDidBeginEditing:(UITextField *)textField{
     
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
     
     if (textField.tag == 2 && self.startLocationField.text.length == 0){
-        self.startLocationField.text = @"Current Location";
-        self.startLocationField.textColor = [UIColor blueColor];
+        [self makeStartFieldCurrentLocation];
     }
     
-    self.enterInstructionsView.hidden = NO;
-
     
+}
+
+-(void) keyboardDidShow{
+    self.enterInstructionsView.hidden = NO;
 }
 
 
 -(void) textFieldDidEndEditing:(UITextField *)textField{
     if (textField.text.length == 0){
         self.navigationItem.rightBarButtonItem = nil;
+        
+        if (textField.tag == 1) [self makeStartFieldCurrentLocation];
     }
+
+
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -377,7 +395,6 @@
     
     if (textField.tag == 1 && self.startLocationField.textColor != [UIColor blackColor]) self.startLocationField.textColor = [UIColor blackColor];
     
-    NSLog(@"replacement string == %@, range.location == %i, range.length == %i", string, range.location, range.length);
     if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.navigationItem.rightBarButtonItem = self.goBarButtonItem;
     
     if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.navigationItem.rightBarButtonItem = nil;
