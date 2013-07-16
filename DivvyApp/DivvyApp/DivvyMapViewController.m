@@ -42,6 +42,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *listBarButtonItem;
 @property (strong, nonatomic) IBOutlet UIView *barHolderView;
 
+
 @end
 
 @implementation DivvyMapViewController {
@@ -94,7 +95,6 @@
                           NSLog(@"Start geocode completed");
                           NSLog(@"placemarks = %@", placemarks);
                           self.startLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
                           
                           NSLog(@"start location = %f,%f", self.startLocation.coordinate.latitude, self.startLocation.coordinate.longitude);
                           
@@ -118,7 +118,6 @@
                           NSLog(@"End geocode completed");
                           
                           self.endLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
                           if (error) {
                               NSLog(@"Error in geocode end address: %@", error);
                               UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Try again" message:@"Couldn't get directions from server, make sure you entered the address correctly." delegate:self cancelButtonTitle:@"Will do!" otherButtonTitles: nil];
@@ -156,6 +155,9 @@
     
     [self addMarkerForStation:pickupBikeStation];
     [self addMarkerForStation:dropoffBikeStation];
+    [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
+    [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
+
     
 }
 
@@ -270,8 +272,9 @@
     
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
     
-    if (self.startLocationField.editing) self.startLocationField.text = cell.textLabel.text;
-    if (self.endLocationField.editing) self.endLocationField.text = cell.textLabel.text;
+    UITextView * textView = (UITextView*)[cell viewWithTag:1];
+    if (self.startLocationField.editing) self.startLocationField.text = textView.text;
+    if (self.endLocationField.editing) self.endLocationField.text = textView.text;
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
@@ -307,17 +310,13 @@
     
     if (indexPath.row < [self.displayedData count]){
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
-        cell.textLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
+        UITextView * addressLabel = (UITextView*)[cell viewWithTag:1];
+        addressLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
         cell.userInteractionEnabled = YES;
-        
         
     } else {
         cell.textLabel.text = @"";
         cell.userInteractionEnabled = NO;
-        
-        UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss:)];
-        tap.delegate = self;
-        [cell addGestureRecognizer:tap];
     }
     
     
