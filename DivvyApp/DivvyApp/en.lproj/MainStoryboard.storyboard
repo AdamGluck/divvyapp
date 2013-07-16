@@ -62,7 +62,7 @@
             <objects>
                 <viewController id="vbQ-lx-RVJ" customClass="DivvyHomeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MsL-1D-2Cx">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="DIVVY BIKE SHARE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mus-cE-5iw">
@@ -96,9 +96,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="ER4-lV-ApI" kind="push" identifier="moveToMap" id="WdG-V4-eoy"/>
-                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -120,6 +117,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="M7z-q1-VXn"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="endLocationInput" destination="69b-Ur-zn8" id="z4d-cG-L9o"/>
                         <outlet property="startLocationInput" destination="2zH-vI-HmI" id="t0i-JU-qkm"/>
@@ -127,43 +125,51 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V05-Cy-Cgx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-71" y="-373"/>
+            <point key="canvasLocation" x="-116" y="-1033"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lOs-80-bwr">
             <objects>
                 <navigationController wantsFullScreenLayout="YES" definesPresentationContext="YES" id="BGu-rz-dWR" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Z4J-Hz-Yrq">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="vbQ-lx-RVJ" kind="relationship" relationship="rootViewController" id="hYx-Ay-uDz"/>
+                        <segue destination="ER4-lV-ApI" kind="relationship" relationship="rootViewController" id="c6n-31-8ry"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hyC-ni-8ON" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-624" y="-545"/>
+            <point key="canvasLocation" x="-270" y="-373"/>
         </scene>
         <!--Divvy Map View Controller-->
         <scene sceneID="SZB-1u-u02">
             <objects>
                 <viewController id="ER4-lV-ApI" customClass="DivvyMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DGJ-Wd-Qom">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="38" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-8N-pNX">
+                            <tableView hidden="YES" clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="54" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-8N-pNX">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="223" id="jqg-Xw-q9T"/>
+                                    <constraint firstAttribute="height" constant="216" id="x1p-0E-2Vm"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="enterLocationCell" rowHeight="38" id="bQK-o9-XuJ">
-                                        <rect key="frame" x="0.0" y="22" width="280" height="38"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="enterLocationCell" textLabel="lvc-C7-bRh" rowHeight="54" style="IBUITableViewCellStyleDefault" id="bQK-o9-XuJ">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="280" height="37"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="53"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lvc-C7-bRh">
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </label>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
@@ -173,35 +179,91 @@
                                     <outlet property="delegate" destination="ER4-lV-ApI" id="a0Y-Gh-qMe"/>
                                 </connections>
                             </tableView>
+                            <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eNo-fx-uOf">
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Start Location" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="i0L-xR-ArA">
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="230" id="N3D-aD-uq8"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="ER4-lV-ApI" id="dQE-jz-M4M"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="End Location" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="lQb-h4-qzj">
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="ER4-lV-ApI" id="Ztf-Kh-oYr"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="i0L-xR-ArA" firstAttribute="top" secondItem="eNo-fx-uOf" secondAttribute="top" constant="4" id="0VH-vy-Okn"/>
+                                    <constraint firstItem="i0L-xR-ArA" firstAttribute="trailing" secondItem="lQb-h4-qzj" secondAttribute="trailing" type="default" id="3ZA-wp-KGk"/>
+                                    <constraint firstItem="i0L-xR-ArA" firstAttribute="leading" secondItem="lQb-h4-qzj" secondAttribute="leading" type="default" id="HnI-nX-48b"/>
+                                    <constraint firstItem="lQb-h4-qzj" firstAttribute="centerX" secondItem="eNo-fx-uOf" secondAttribute="centerX" type="default" id="rCD-nm-Sa9"/>
+                                    <constraint firstItem="lQb-h4-qzj" firstAttribute="top" secondItem="eNo-fx-uOf" secondAttribute="top" constant="37" id="yV7-eC-TtR"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="ILR-se-QsC" appends="YES" id="U75-pf-Isl"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="qcZ-8N-pNX" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="45e-QZ-Tex"/>
-                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" constant="11" id="Ef4-3o-c61"/>
-                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="OO7-0K-ngD"/>
+                            <constraint firstAttribute="bottom" secondItem="eNo-fx-uOf" secondAttribute="bottom" constant="430" id="3Of-wq-RRe"/>
+                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="YqJ-e0-R7N"/>
+                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" constant="73" id="Yw5-JU-luG"/>
+                            <constraint firstItem="eNo-fx-uOf" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="ZPN-lv-5sS"/>
+                            <constraint firstItem="eNo-fx-uOf" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="kBJ-tH-dkk"/>
+                            <constraint firstItem="qcZ-8N-pNX" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="muX-yD-00F"/>
+                            <constraint firstItem="eNo-fx-uOf" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" type="default" id="y78-F4-Xr8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zFQ-zk-42S">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="V2J-Nx-wvT">
+                        <barButtonItem key="leftBarButtonItem" title="List" id="V2J-Nx-wvT">
                             <connections>
                                 <segue destination="ZbR-dU-Fvi" kind="push" identifier="showInstructions" id="MDp-Nb-hR2"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Go" style="done" id="9rS-GQ-RHS">
+                            <connections>
+                                <action selector="startGoing:" destination="ER4-lV-ApI" id="3Yv-Ty-NPC"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="barHolderView" destination="eNo-fx-uOf" id="Bvf-ZN-n9N"/>
+                        <outlet property="endLocationField" destination="lQb-h4-qzj" id="fID-BU-ydW"/>
                         <outlet property="enterInstructionsView" destination="qcZ-8N-pNX" id="PX2-la-MBQ"/>
+                        <outlet property="goBarButtonItem" destination="9rS-GQ-RHS" id="vok-EP-wZh"/>
+                        <outlet property="listBarButtonItem" destination="V2J-Nx-wvT" id="1Bg-ZB-653"/>
+                        <outlet property="startLocationField" destination="i0L-xR-ArA" id="s07-Og-56J"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BxZ-DJ-OdY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="ILR-se-QsC">
+                    <connections>
+                        <action selector="dismiss:" destination="ER4-lV-ApI" id="zTq-pj-gcp"/>
+                        <outlet property="delegate" destination="ER4-lV-ApI" id="q2P-fX-25a"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="407" y="-373"/>
+            <point key="canvasLocation" x="161" y="-373"/>
         </scene>
         <!--Divvy Direction View Controller-->
         <scene sceneID="MrN-NI-a3b">
             <objects>
                 <tableViewController id="ZbR-dU-Fvi" customClass="DivvyDirectionViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="77" sectionHeaderHeight="22" sectionFooterHeight="22" id="H4v-Ym-tDO">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -251,7 +313,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c71-p0-Tn4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="847" y="-373"/>
+            <point key="canvasLocation" x="589" y="-373"/>
         </scene>
     </scenes>
     <resources>
@@ -271,7 +333,12 @@
         <class className="DivvyMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
             <relationships>
+                <relationship kind="outlet" name="barHolderView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="endLocationField" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="enterInstructionsView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="goBarButtonItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="listBarButtonItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="startLocationField" candidateClass="UITextField"/>
             </relationships>
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">

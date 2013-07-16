@@ -80,7 +80,6 @@
         
     }
     
-    
 }
 
 
@@ -175,7 +174,7 @@
         if (((distance < shortestDistance) && optionBool) || !shortestDistance){
             shortestDistance = distance;
             nearestStation = station;
-        } 
+        }
     }
     
     return nearestStation;
@@ -189,6 +188,7 @@
     [self.locationManager startUpdatingLocation];
     
 }
+
 
 -(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     
