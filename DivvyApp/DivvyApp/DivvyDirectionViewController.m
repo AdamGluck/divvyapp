@@ -103,11 +103,11 @@
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     if (section == 0){
-        return @"First Walking Route";
+        return @"Walking route";
     } else if (section == 1){
         return @"Biking Route";
     } else {
-        return @"End Walking Route";
+        return @"Walking route";
     }
 }
 

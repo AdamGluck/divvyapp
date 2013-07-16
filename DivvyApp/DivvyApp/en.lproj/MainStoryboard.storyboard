@@ -240,35 +240,6 @@
     <resources>
         <image name="divvy_logo.jpg" width="160" height="160"/>
     </resources>
-    <classes>
-        <class className="DivvyDirectionViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyDirectionViewController.h"/>
-        </class>
-        <class className="DivvyHomeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyHomeViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="endLocationInput" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="startLocationInput" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="DivvyMapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="mapViewContainer" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="ViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="nearestLocationButtonPressed:"/>
-                <relationship kind="outlet" name="mapViewContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="nearestLocationText" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

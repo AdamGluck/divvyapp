@@ -46,21 +46,27 @@
     [self.dataAccess fillStationDataSynchronously];
     [self.dataAccess grabNearestStationToDeviceWithOption:kNearestStationAny];
     
+    
     [self geocodeStartAddress];
 }
 
 - (void)geocodeStartAddress
 {
+    NSLog(@"About to geocode start address");
     [self.geocoder geocodeAddressString:self.startAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
-                          NSLog(@"Start geocode completed");
-                          self.startLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
-                          [self geocodeEndAddress];
+                          NSLog(@"In start geocode completion handler");
                           if (error) {
                               NSLog(@"Error in geocoder: %@", error);
+                              NSString *message = [NSString stringWithFormat:@"Sorry! We could not locate your start address: %@. Please go back and try again!", self.startAddress];
+                              [self alertUserToErrorWithMessage:message];
+                          } else {
+                              self.startLocation = ((CLPlacemark *)placemarks[0]).location;
+                              [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
+                              [self geocodeEndAddress];
                           }
+
                       }];
     
 
@@ -68,21 +74,27 @@
 
 - (void)geocodeEndAddress
 {
+    NSLog(@"about to geocode end address");
     [self.geocoder geocodeAddressString:self.endAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
-                          NSLog(@"End geocode completed");
-                          self.endLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
-                          [self findStations];
                           if (error) {
                               NSLog(@"Error in geocoder: %@", error);
+                              NSString *message = [NSString stringWithFormat:@"Sorry! We could not locate your end address: %@. Please go back and try again!", self.endAddress];
+                              [self alertUserToErrorWithMessage:message];
+                          } else {
+                              NSLog(@"In end geocode completion handler");
+                              self.endLocation = ((CLPlacemark *)placemarks[0]).location;
+                              [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
+                              [self findStations];
                           }
+
                       }];
 }
 
 - (void)findStations
 {
+    
     BGLStationObject *pickupBikeStation = [self.dataAccess grabNearestStationTo:self.startLocation withOption:kNearestStationWithBike];
     
     BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
@@ -134,6 +146,12 @@
     marker.map = mapView_;
 }
 
+- (void)alertUserToErrorWithMessage:(NSString *)message
+{
+    if (!message) message = @"Sorry! We could not find your location.";
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Geocoding Error" message:message delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+    [alert show];
+}
 
 
 -(void) deviceLocationFoundAtLocation:(CLLocation *)deviceLocation{
