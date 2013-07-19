@@ -38,9 +38,10 @@
 @property (strong, nonatomic) IBOutlet UITableView *enterInstructionsView;
 
 // barbuttonitems 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *goBarButtonItem;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *listBarButtonItem;
+@property (strong, nonatomic) IBOutlet UIButton *listButton;
+@property (strong, nonatomic) IBOutlet UIButton *goButton;
 @property (strong, nonatomic) IBOutlet UIView *barHolderView;
+
 
 @end
 
@@ -57,16 +58,16 @@
     self.dataAccess.delegate = self;
     // for testing
     // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
-    [self configureBarHolderView];
-    [self configureNavigationBar];
+    //[self configureBarHolderView];
+    //[self configureNavigationBar];
     [self configureLocationManager];
     [self loadMap];
     [self configureTableView];
     
-    /*[[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidShow:)
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow)
                                                  name:UIKeyboardDidShowNotification
-                                               object:nil];*/
+                                               object:nil];
     
     [self.dataAccess fillStationDataASynchronously]; // so we can use this data later
     
@@ -95,7 +96,6 @@
                           NSLog(@"Start geocode completed");
                           NSLog(@"placemarks = %@", placemarks);
                           self.startLocation = ((CLPlacemark *)placemarks[0]).location;
-                          [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
                           
                           NSLog(@"start location = %f,%f", self.startLocation.coordinate.latitude, self.startLocation.coordinate.longitude);
                           
@@ -121,7 +121,6 @@
                           NSLog(@"End geocode completed");
                           
                           self.endLocation = ((CLPlacemark *)placemarks[0]).location;
-                          
                           if (error) {
                               NSLog(@"Error in geocode end address: %@", error);
                               UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Try again" message:@"Couldn't get directions from server, make sure you entered the address correctly." delegate:self cancelButtonTitle:@"Will do!" otherButtonTitles: nil];
@@ -163,16 +162,14 @@
     
     [self addMarkerForStation:pickupBikeStation];
     [self addMarkerForStation:dropoffBikeStation];
+    [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
+    [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
+
     
 }
 
 #pragma mark - map drawing functions
 
--(void) configureNavigationBar {
-    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:35.0/255.0 green:35.0/255.0 blue:35.0/255.0 alpha: .9f];
-    self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = nil;
-}
 
 -(void) configureBarHolderView {
     NSLog(@"configure bar holder view called");
@@ -274,11 +271,14 @@
 #pragma mark - GoogleBikeRouteDelegate functions
 
 -(void) routeWithPolyline: (GMSPolyline *) polyline{
+    
     polyline.map = mapView_;
     
     if (++polylineCount == 3) {
-        self.navigationItem.leftBarButtonItem = self.listBarButtonItem;
-        self.navigationItem.rightBarButtonItem = nil;
+
+        self.goButton.hidden = YES;
+        self.listButton.hidden = NO;
+
     }
     
 }
@@ -292,6 +292,9 @@
         NSDictionary * routesDictionary = routesArray[0];
         NSDictionary * legsDictionary = routesDictionary[@"legs"][0];
         [self.directionsArray addObject:legsDictionary];
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Where?" message:@"There was an error finding part of your route, make sure you entered the address correctly and try again" delegate:self cancelButtonTitle:@"I'll try again." otherButtonTitles: nil];
+        [alert show];
     }
     
 }
@@ -318,8 +321,9 @@
     
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
     
-    if (self.startLocationField.editing) self.startLocationField.text = cell.textLabel.text;
-    if (self.endLocationField.editing) self.endLocationField.text = cell.textLabel.text;
+    UITextView * textView = (UITextView*)[cell viewWithTag:1];
+    if (self.startLocationField.editing) self.startLocationField.text = textView.text;
+    if (self.endLocationField.editing) self.endLocationField.text = textView.text;
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
@@ -355,8 +359,10 @@
     
     if (indexPath.row < [self.displayedData count]){
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
-        cell.textLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
+        UITextView * addressLabel = (UITextView*)[cell viewWithTag:1];
+        addressLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
         cell.userInteractionEnabled = YES;
+        
     } else {
         cell.textLabel.text = @"";
         cell.userInteractionEnabled = NO;
@@ -386,33 +392,51 @@
 - (IBAction)startGoing:(id)sender {
     
     if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0){
+        // this hides the tableview
         self.enterInstructionsView.hidden = YES;
+        // this dismisses the keyboard
         [self.view endEditing:YES];
-        NSLog(@"start address: %@", self.startLocationField.text);
+        
+        // this sets the start address
         self.startAddress = self.startLocationField.text;
-        
-        NSLog(@"end address: %@", self.endLocationField.text);
+        // this sets the end address
         self.endAddress = self.endLocationField.text;
-        [self geocodeStartAddress];
         
-    } 
+        // this uses the start and end address variables to geocode a route
+        [self geocodeStartAddress];
+    }
+    
+    self.goButton.backgroundColor = [UIColor clearColor];
 }
 
+- (IBAction)touchedButton:(id)sender {
+    self.goButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:1.0f];
+}
 
 #pragma mark - UITextField Delegate 
 
+-(void) makeStartFieldCurrentLocation{
+    self.startLocationField.text = @"Current Location";
+    self.startLocationField.textColor = [UIColor blueColor];
+}
+
 -(void) textFieldDidBeginEditing:(UITextField *)textField{
     
+    // this will make it so that the address string is immediately geocoded and a list of suggestions appear
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
+
+    if (self.endLocationField.text.length > 0 && !self.goButton.hidden) self.goButton.hidden = NO;
     
 //    if (textField.tag == 2 && self.startLocationField.text.length == 0){
 //        self.startLocationField.text = @"Current Location";
 //        self.startLocationField.textColor = [UIColor blueColor];
 //    }
     
-    self.enterInstructionsView.hidden = NO;
+}
 
-    
+-(void) keyboardDidShow{
+    // this is called from the notification center
+    self.enterInstructionsView.hidden = NO;
 }
 
 -(void) displayCurrentLocationInTextField:(UITextField *)textField
@@ -424,28 +448,32 @@
 
 -(void) textFieldDidEndEditing:(UITextField *)textField{
     if (textField.text.length == 0){
-        self.navigationItem.rightBarButtonItem = nil;
+        self.goButton.hidden = YES;
+        if (textField.tag == 1) [self makeStartFieldCurrentLocation];
     }
+
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
 
     [self geocodeAddressStringToDisplay:textField.text];
     
+    // if the text field is the first one, and the text color is not black (only other case right now is blue) make blue
     if (textField.tag == 1 && self.startLocationField.textColor != [UIColor blackColor]) self.startLocationField.textColor = [UIColor blackColor];
     
-    NSLog(@"replacement string == %@, range.location == %i, range.length == %i", string, range.location, range.length);
-    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.navigationItem.rightBarButtonItem = self.goBarButtonItem;
+    // will make the go button appear when the text length is greater than 0, this way you can't "go" if you enter no value
+    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.goButton.hidden = NO;
     
-    if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.navigationItem.rightBarButtonItem = nil;
-    
+    // this removes the right bar button item when the text field is cleared by deletion
+    if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.goButton.hidden = YES;
     
     return YES;
 }
 
 -(BOOL) textFieldShouldClear:(UITextField *)textField{
     
-    if (textField.tag == 2) self.navigationItem.rightBarButtonItem = nil;
+    // this will just remove the right bar button item if the text field is cleared and it is the end location field
+    if (textField.tag == 2) self.goButton.hidden = YES;
     
     return YES;
 }

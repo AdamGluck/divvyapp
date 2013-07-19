@@ -8,7 +8,7 @@
 
 #import "DivvyDirectionViewController.h"
 
-@interface DivvyDirectionViewController ()
+@interface DivvyDirectionViewController () <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) NSMutableArray * stepsArray;
 
@@ -60,6 +60,14 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRecognized:)];
+    swipe.delegate = self;
+    [self.view addGestureRecognizer:swipe];
+}
+
+-(void) swipeRecognized: (UISwipeGestureRecognizer *) swipe{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning
