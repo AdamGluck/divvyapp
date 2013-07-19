@@ -343,13 +343,17 @@
 - (IBAction)startGoing:(id)sender {
     
     if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0){
+        // this hides the tableview
         self.enterInstructionsView.hidden = YES;
+        // this dismisses the keyboard
         [self.view endEditing:YES];
-        NSLog(@"start address: %@", self.startLocationField.text);
-        self.startAddress = self.startLocationField.text;
         
-        NSLog(@"end address: %@", self.endLocationField.text);
+        // this sets the start address
+        self.startAddress = self.startLocationField.text;
+        // this sets the end address
         self.endAddress = self.endLocationField.text;
+        
+        // this uses the start and end address variables to geocode a route
         [self geocodeStartAddress];
     } 
 }
@@ -364,16 +368,16 @@
 
 -(void) textFieldDidBeginEditing:(UITextField *)textField{
     
+    // this will make it so that the address string is immediately geocoded and a list of suggestions appear
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
-    
-    if (textField.tag == 2 && self.startLocationField.text.length == 0){
-        [self makeStartFieldCurrentLocation];
-    }
+
+    if (self.endLocationField.text.length > 0 && !self.navigationItem.rightBarButtonItem) self.navigationItem.rightBarButtonItem = self.goBarButtonItem;
     
     
 }
 
 -(void) keyboardDidShow{
+    // this is called from the notification center
     self.enterInstructionsView.hidden = NO;
 }
 
@@ -381,10 +385,8 @@
 -(void) textFieldDidEndEditing:(UITextField *)textField{
     if (textField.text.length == 0){
         self.navigationItem.rightBarButtonItem = nil;
-        
         if (textField.tag == 1) [self makeStartFieldCurrentLocation];
     }
-
 
 }
 
@@ -392,18 +394,21 @@
 
     [self geocodeAddressStringToDisplay:textField.text];
     
+    // if the text field is the first one, and the text color is not black (only other case right now is blue) make blue
     if (textField.tag == 1 && self.startLocationField.textColor != [UIColor blackColor]) self.startLocationField.textColor = [UIColor blackColor];
     
+    // will make the go button appear when the text length is greater than 0, this way you can't "go" if you enter no value
     if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.navigationItem.rightBarButtonItem = self.goBarButtonItem;
     
+    // this removes the right bar button item when the text field is cleared by deletion
     if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.navigationItem.rightBarButtonItem = nil;
-    
     
     return YES;
 }
 
 -(BOOL) textFieldShouldClear:(UITextField *)textField{
     
+    // this will just remove the right bar button item if the text field is cleared and it is the end location field
     if (textField.tag == 2) self.navigationItem.rightBarButtonItem = nil;
     
     return YES;
