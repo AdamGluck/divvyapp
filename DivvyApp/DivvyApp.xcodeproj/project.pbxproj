@@ -17,7 +17,6 @@
 		0F4CF4B01783A67600889B08 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4AF1783A67600889B08 /* Default@2x.png */; };
 		0F4CF4B21783A67600889B08 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4B11783A67600889B08 /* Default-568h@2x.png */; };
 		0F4CF4B51783A67600889B08 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4B31783A67600889B08 /* MainStoryboard.storyboard */; };
-		0F4CF4B81783A67700889B08 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4B71783A67700889B08 /* ViewController.m */; };
 		0F4CF4C01783A7DB00889B08 /* BGLDivvyDataAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */; };
 		0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7830178A3B3700CAC533 /* BGLStationObject.m */; };
 		0F9B7834178A631700CAC533 /* GoogleBikeRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7833178A631700CAC533 /* GoogleBikeRoute.m */; };
@@ -57,8 +56,6 @@
 		0F4CF4AF1783A67600889B08 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		0F4CF4B11783A67600889B08 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0F4CF4B41783A67600889B08 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		0F4CF4B61783A67600889B08 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		0F4CF4B71783A67700889B08 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		0F4CF4BE1783A7DB00889B08 /* BGLDivvyDataAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLDivvyDataAccess.h; sourceTree = "<group>"; };
 		0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLDivvyDataAccess.m; sourceTree = "<group>"; };
 		0F9B782F178A3B3700CAC533 /* BGLStationObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLStationObject.h; sourceTree = "<group>"; };
@@ -175,8 +172,6 @@
 				8DF87C40178A572C00A77764 /* DivvyMapViewController.m */,
 				8DF87C3C178A570600A77764 /* DivvyHomeViewController.h */,
 				8DF87C3D178A570700A77764 /* DivvyHomeViewController.m */,
-				0F4CF4B61783A67600889B08 /* ViewController.h */,
-				0F4CF4B71783A67700889B08 /* ViewController.m */,
 				0F4CF4BE1783A7DB00889B08 /* BGLDivvyDataAccess.h */,
 				0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */,
 				0F9B782F178A3B3700CAC533 /* BGLStationObject.h */,
@@ -271,7 +266,6 @@
 			files = (
 				0F4CF4A81783A67600889B08 /* main.m in Sources */,
 				0F4CF4AC1783A67600889B08 /* AppDelegate.m in Sources */,
-				0F4CF4B81783A67700889B08 /* ViewController.m in Sources */,
 				0F4CF4C01783A7DB00889B08 /* BGLDivvyDataAccess.m in Sources */,
 				0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */,
 				8DF87C3E178A570700A77764 /* DivvyHomeViewController.m in Sources */,

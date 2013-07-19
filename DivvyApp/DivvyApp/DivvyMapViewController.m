@@ -38,8 +38,8 @@
 @property (strong, nonatomic) IBOutlet UITableView *enterInstructionsView;
 
 // barbuttonitems 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *goBarButtonItem;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *listBarButtonItem;
+@property (strong, nonatomic) IBOutlet UIButton *listButton;
+@property (strong, nonatomic) IBOutlet UIButton *goButton;
 @property (strong, nonatomic) IBOutlet UIView *barHolderView;
 
 
@@ -58,8 +58,8 @@
     self.dataAccess.delegate = self;
     // for testing
     // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
-    [self configureBarHolderView];
-    [self configureNavigationBar];
+    //[self configureBarHolderView];
+    //[self configureNavigationBar];
     [self configureLocationManager];
     [self loadMap];
     [self configureTableView];
@@ -163,26 +163,7 @@
 
 #pragma mark - map drawing functions
 
--(void) configureNavigationBar {
-    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:35.0/255.0 green:35.0/255.0 blue:35.0/255.0 alpha: .9f];
-    self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = nil;
-}
 
--(void) configureBarHolderView {
-    NSLog(@"configure bar holder view called");
-    CAGradientLayer * gradient = [CAGradientLayer layer];
-    
-    gradient.frame = CGRectMake(0, 0, 320, 74); // hardcoded because of table view header settings
-    
-    NSLog(@"gradient.bounds = (%f, %f, %f, %f)", gradient.frame.origin.x, gradient.frame.origin.y, gradient.frame.size.width, gradient.frame.size.height);
-    gradient.colors =  @[(id)[[UIColor colorWithRed: 230.0/255.0 green: 230.0/255.0 blue: 230.0/255.0 alpha: 1.0f] CGColor],
-                         (id)[[UIColor colorWithRed:214.0/255.0 green:214.0/255.0 blue:214.0/255.0 alpha:1.0f] CGColor]];
-    [self.barHolderView.layer insertSublayer:gradient atIndex:0];
-    
-    // 214
-    
-}
 - (void)loadMap
 {
     NSLog(@"Loading map view");
@@ -228,8 +209,10 @@
     polyline.map = mapView_;
     
     if (++polylineCount == 3) {
-        self.navigationItem.leftBarButtonItem = self.listBarButtonItem;
-        self.navigationItem.rightBarButtonItem = nil;
+
+        self.goButton.hidden = YES;
+        self.listButton.hidden = NO;
+
     }
     
 }
@@ -355,9 +338,14 @@
         
         // this uses the start and end address variables to geocode a route
         [self geocodeStartAddress];
-    } 
+    }
+    
+    self.goButton.backgroundColor = [UIColor clearColor];
 }
 
+- (IBAction)touchedButton:(id)sender {
+    self.goButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:1.0f];
+}
 
 #pragma mark - UITextField Delegate 
 
@@ -371,7 +359,7 @@
     // this will make it so that the address string is immediately geocoded and a list of suggestions appear
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
 
-    if (self.endLocationField.text.length > 0 && !self.navigationItem.rightBarButtonItem) self.navigationItem.rightBarButtonItem = self.goBarButtonItem;
+    if (self.endLocationField.text.length > 0 && !self.goButton.hidden) self.goButton.hidden = NO;
     
     
 }
@@ -384,7 +372,7 @@
 
 -(void) textFieldDidEndEditing:(UITextField *)textField{
     if (textField.text.length == 0){
-        self.navigationItem.rightBarButtonItem = nil;
+        self.goButton.hidden = YES;
         if (textField.tag == 1) [self makeStartFieldCurrentLocation];
     }
 
@@ -398,10 +386,10 @@
     if (textField.tag == 1 && self.startLocationField.textColor != [UIColor blackColor]) self.startLocationField.textColor = [UIColor blackColor];
     
     // will make the go button appear when the text length is greater than 0, this way you can't "go" if you enter no value
-    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.navigationItem.rightBarButtonItem = self.goBarButtonItem;
+    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.goButton.hidden = NO;
     
     // this removes the right bar button item when the text field is cleared by deletion
-    if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.navigationItem.rightBarButtonItem = nil;
+    if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.goButton.hidden = YES;
     
     return YES;
 }
@@ -409,7 +397,7 @@
 -(BOOL) textFieldShouldClear:(UITextField *)textField{
     
     // this will just remove the right bar button item if the text field is cleared and it is the end location field
-    if (textField.tag == 2) self.navigationItem.rightBarButtonItem = nil;
+    if (textField.tag == 2) self.goButton.hidden = YES;
     
     return YES;
 }
