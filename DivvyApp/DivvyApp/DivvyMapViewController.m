@@ -58,7 +58,7 @@
     self.dataAccess.delegate = self;
     // for testing
     // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
-    //[self configureBarHolderView];
+    [self configureBarHolderView];
     //[self configureNavigationBar];
     [self configureLocationManager];
     [self loadMap];
@@ -183,33 +183,34 @@
     [self.barHolderView.layer insertSublayer:gradient atIndex:0];
     
     
-    // Configure Current Location Button
-    NSLog(@"%@", self.startLocationField.gestureRecognizers);
-//    NSArray *startGestureRecs = self.startLocationField.gestureRecognizers;
-//    for (int i = 0; i < [startGestureRecs count]; i++) {
-//        //if ([[startGestureRecs objectAtIndex:i] isKindOfClass:[UITapGestureRecognizer class] ]) {
-//            UIGestureRecognizer *gesRec = (UIGestureRecognizer *)[startGestureRecs objectAtIndex:i];
-//            gesRec.cancelsTouchesInView = NO;
-//            
-//        //}
-//    }
-//    
+    // Configure Current Location Button (this is awful, I know)
+    NSArray *startGestureRecs = self.startLocationField.gestureRecognizers;
+    for (int i = 0; i < [startGestureRecs count]; i++) {
+        UIGestureRecognizer *gesRec = (UIGestureRecognizer *)[startGestureRecs objectAtIndex:i];
+        gesRec.cancelsTouchesInView = NO;
+    }
+    
     UIImage *locationIcon = [UIImage imageNamed:@"74-location.png"];
     UITapGestureRecognizer *locationTapGestureRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLocationTap:)];
     [locationTapGestureRec setNumberOfTapsRequired:1];
-//    locationTapGestureRec.cancelsTouchesInView = NO;
     
     [self.startLocationField setRightViewMode:UITextFieldViewModeUnlessEditing];
     [self.endLocationField setRightViewMode:UITextFieldViewModeUnlessEditing];
     
-    self.startLocationField.rightView = [[UIImageView alloc] initWithImage:locationIcon];
-    self.endLocationField.rightView = [[UIImageView alloc] initWithImage:locationIcon];
+    UIImageView *locationIconImageViewStart = [[UIImageView alloc] initWithImage:locationIcon];
+    UIImageView *locationIconImageViewEnd = [[UIImageView alloc] initWithImage:locationIcon];
     
-    //self.startLocationField.userInteractionEnabled = YES;
-    //self.startLocationField.rightView.userInteractionEnabled = YES;
+    [locationIconImageViewStart addGestureRecognizer:locationTapGestureRec];
+    [locationIconImageViewEnd addGestureRecognizer:locationTapGestureRec];
     
-    [self.startLocationField.rightView addGestureRecognizer:locationTapGestureRec];
-    [self.endLocationField.rightView addGestureRecognizer:locationTapGestureRec];
+    self.startLocationField.rightView = locationIconImageViewStart;
+    self.endLocationField.rightView = locationIconImageViewEnd;
+    
+    self.startLocationField.userInteractionEnabled = YES;
+    self.endLocationField.userInteractionEnabled = YES;
+    
+    self.startLocationField.rightView.userInteractionEnabled = YES;
+    self.endLocationField.rightView.userInteractionEnabled = YES;
 
     locationTapGestureRec.delegate = self;
     
@@ -220,9 +221,16 @@
 - (void)handleLocationTap:(UITapGestureRecognizer *)recognizer
 {
     NSLog(@"In handle location tap");
-    UITextField *textField = (UITextField *)recognizer.view;
+    UITextField *textField = (UITextField *)recognizer.view.superview;
     [self displayCurrentLocationInTextField:textField];
 }
+
+-(void) displayCurrentLocationInTextField:(UITextField *)textField
+{
+    textField.text = @"Current Location";
+    textField.textColor = [UIColor blueColor];
+}
+
 
 - (void)loadMap
 {
@@ -439,11 +447,6 @@
     self.enterInstructionsView.hidden = NO;
 }
 
--(void) displayCurrentLocationInTextField:(UITextField *)textField
-{
-    textField.text = @"Current Location";
-    textField.textColor = [UIColor blueColor];
-}
 
 
 -(void) textFieldDidEndEditing:(UITextField *)textField{
