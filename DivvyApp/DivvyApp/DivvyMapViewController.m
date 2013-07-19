@@ -70,7 +70,6 @@
     
     [self.dataAccess fillStationDataASynchronously]; // so we can use this data later
     
-    
     [self geocodeStartAddress];
 }
 
@@ -93,14 +92,18 @@
     [self.geocoder geocodeAddressString:self.startAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
-                          NSLog(@"In start geocode completion handler");
+                          NSLog(@"Start geocode completed");
+                          NSLog(@"placemarks = %@", placemarks);
+                          self.startLocation = ((CLPlacemark *)placemarks[0]).location;
+                          [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
+                          
+                          NSLog(@"start location = %f,%f", self.startLocation.coordinate.latitude, self.startLocation.coordinate.longitude);
+                          
                           if (error) {
                               NSLog(@"Error in geocoder: %@", error);
-                              NSString *message = [NSString stringWithFormat:@"Sorry! We could not locate your start address: %@. Please go back and try again!", self.startAddress];
-                              [self alertUserToErrorWithMessage:message];
-                          } else {
-                              self.startLocation = ((CLPlacemark *)placemarks[0]).location;
-                              [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
+                              self.startLocation = self.locationManager.location;
+                              [self geocodeEndAddress];
+                          }else{
                               [self geocodeEndAddress];
                           }
 
@@ -115,10 +118,14 @@
     [self.geocoder geocodeAddressString:self.endAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
+                          NSLog(@"End geocode completed");
+                          
+                          self.endLocation = ((CLPlacemark *)placemarks[0]).location;
+                          
                           if (error) {
-                              NSLog(@"Error in geocoder: %@", error);
-                              NSString *message = [NSString stringWithFormat:@"Sorry! We could not locate your end address: %@. Please go back and try again!", self.endAddress];
-                              [self alertUserToErrorWithMessage:message];
+                              NSLog(@"Error in geocode end address: %@", error);
+                              UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Try again" message:@"Couldn't get directions from server, make sure you entered the address correctly." delegate:self cancelButtonTitle:@"Will do!" otherButtonTitles: nil];
+                              [alert show];
                           } else {
                               NSLog(@"In end geocode completion handler");
                               self.endLocation = ((CLPlacemark *)placemarks[0]).location;
@@ -131,7 +138,8 @@
 
 - (void)findStations
 {
-    
+    polylineCount = 0;
+    [mapView_ clear];
     BGLStationObject *pickupBikeStation = [self.dataAccess grabNearestStationTo:self.startLocation withOption:kNearestStationWithBike];
     
     BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
@@ -177,9 +185,48 @@
                          (id)[[UIColor colorWithRed:214.0/255.0 green:214.0/255.0 blue:214.0/255.0 alpha:1.0f] CGColor]];
     [self.barHolderView.layer insertSublayer:gradient atIndex:0];
     
-    // 214
+    
+    // Configure Current Location Button
+    NSLog(@"%@", self.startLocationField.gestureRecognizers);
+//    NSArray *startGestureRecs = self.startLocationField.gestureRecognizers;
+//    for (int i = 0; i < [startGestureRecs count]; i++) {
+//        //if ([[startGestureRecs objectAtIndex:i] isKindOfClass:[UITapGestureRecognizer class] ]) {
+//            UIGestureRecognizer *gesRec = (UIGestureRecognizer *)[startGestureRecs objectAtIndex:i];
+//            gesRec.cancelsTouchesInView = NO;
+//            
+//        //}
+//    }
+//    
+    UIImage *locationIcon = [UIImage imageNamed:@"74-location.png"];
+    UITapGestureRecognizer *locationTapGestureRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLocationTap:)];
+    [locationTapGestureRec setNumberOfTapsRequired:1];
+//    locationTapGestureRec.cancelsTouchesInView = NO;
+    
+    [self.startLocationField setRightViewMode:UITextFieldViewModeUnlessEditing];
+    [self.endLocationField setRightViewMode:UITextFieldViewModeUnlessEditing];
+    
+    self.startLocationField.rightView = [[UIImageView alloc] initWithImage:locationIcon];
+    self.endLocationField.rightView = [[UIImageView alloc] initWithImage:locationIcon];
+    
+    //self.startLocationField.userInteractionEnabled = YES;
+    //self.startLocationField.rightView.userInteractionEnabled = YES;
+    
+    [self.startLocationField.rightView addGestureRecognizer:locationTapGestureRec];
+    [self.endLocationField.rightView addGestureRecognizer:locationTapGestureRec];
+
+    locationTapGestureRec.delegate = self;
+    
+    
     
 }
+
+- (void)handleLocationTap:(UITapGestureRecognizer *)recognizer
+{
+    NSLog(@"In handle location tap");
+    UITextField *textField = (UITextField *)recognizer.view;
+    [self displayCurrentLocationInTextField:textField];
+}
+
 - (void)loadMap
 {
     NSLog(@"Loading map view");
@@ -267,7 +314,7 @@
 #pragma mark - UITableViewDelegate Functions
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    NSLog(@"Did select row at index path");
     
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
     
@@ -358,14 +405,20 @@
     
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
     
-    if (textField.tag == 2 && self.startLocationField.text.length == 0){
-        self.startLocationField.text = @"Current Location";
-        self.startLocationField.textColor = [UIColor blueColor];
-    }
+//    if (textField.tag == 2 && self.startLocationField.text.length == 0){
+//        self.startLocationField.text = @"Current Location";
+//        self.startLocationField.textColor = [UIColor blueColor];
+//    }
     
     self.enterInstructionsView.hidden = NO;
 
     
+}
+
+-(void) displayCurrentLocationInTextField:(UITextField *)textField
+{
+    textField.text = @"Current Location";
+    textField.textColor = [UIColor blueColor];
 }
 
 
