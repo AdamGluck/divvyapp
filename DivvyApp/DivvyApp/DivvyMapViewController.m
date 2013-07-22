@@ -76,6 +76,7 @@
 
 #pragma mark - Geocoding functions
 
+// this method is used to display geocoding in real time as they enter values
 -(void) geocodeAddressStringToDisplay: (NSString *) addressString{
     [self.geocoder geocodeAddressString:addressString completionHandler:^(NSArray *placemarks, NSError *error){
         self.displayedData = placemarks;
@@ -86,6 +87,8 @@
     }];
     
 }
+
+// read these three functions from top to bottom, start address leads to end address, which then draws the stations
 - (void)geocodeStartAddress
 {
 
@@ -234,9 +237,10 @@
 }
 
 #pragma mark - Storyboard Functions
+
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
-    if ([self.directionsArray count])
+    if ([self.directionsArray count] == 3)
         ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
     
 }
@@ -347,7 +351,9 @@
     self.goButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:1.0f];
 }
 
-#pragma mark - UITextField Delegate 
+#pragma mark - UITextField Delegate
+
+// This area below needs to be cleaned up
 
 -(void) makeStartFieldCurrentLocation{
     self.startLocationField.text = @"Current Location";
