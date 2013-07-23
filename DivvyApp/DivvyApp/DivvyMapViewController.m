@@ -108,8 +108,6 @@
 }
 
 
-
-
 // to ensure it is at the bottom of stack use after mapView is drawn
 -(void)configureContainerView
 {
@@ -126,64 +124,8 @@
     [self setLeftPaddingForTextField:self.startLocationField];
     [self setLeftPaddingForTextField:self.endLocationField];
     
-//    // Configure Current Location Button (this is awful, I know)
-//    NSArray *startGestureRecs = self.startLocationField.gestureRecognizers;
-//    for (int i = 0; i < [startGestureRecs count]; i++) {
-//        UIGestureRecognizer *gesRec = (UIGestureRecognizer *)[startGestureRecs objectAtIndex:i];
-//        gesRec.cancelsTouchesInView = NO;
-//    }
-//    
-//    UIImage *locationIcon = [UIImage imageNamed:@"74-location.png"];
-//    UITapGestureRecognizer *locationTapGestureRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLocationTap:)];
-//    [locationTapGestureRec setNumberOfTapsRequired:1];
-//    
-//    [self.startLocationField setRightViewMode:UITextFieldViewModeUnlessEditing];
-//    [self.endLocationField setRightViewMode:UITextFieldViewModeUnlessEditing];
-//    
-//    UIImageView *locationIconImageViewStart = [[UIImageView alloc] initWithImage:locationIcon];
-//    UIImageView *locationIconImageViewEnd = [[UIImageView alloc] initWithImage:locationIcon];
-//    
-//    [locationIconImageViewStart addGestureRecognizer:locationTapGestureRec];
-//    [locationIconImageViewEnd addGestureRecognizer:locationTapGestureRec];
-//    
-//    self.startLocationField.rightView = locationIconImageViewStart;
-//    self.endLocationField.rightView = locationIconImageViewEnd;
-//    
-//    self.startLocationField.userInteractionEnabled = YES;
-//    self.endLocationField.userInteractionEnabled = YES;
-//    
-//    self.startLocationField.rightView.userInteractionEnabled = YES;
-//    self.endLocationField.rightView.userInteractionEnabled = YES;
-//    
-//    locationTapGestureRec.delegate = self;
 }
 
-//-(void) configureLocationManager
-//{
-//    self.locationManager = [[CLLocationManager alloc] init];
-//    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//    self.locationManager.delegate = self;
-//    [self.locationManager startUpdatingLocation];
-//}
-//
-//
-//
-//// to ensure it is at the bottom of stack use after mapView is drawn
-//-(void)configureContainerView
-//{
-//    [self.view insertSubview:self.containerView belowSubview:mapView_];
-//}
-//
-//-(void) configureTableView
-//{
-//    self.addressOptionsTableView.backgroundColor = [UIColor clearColor];
-//}
-//
-//-(void)configureTextFields
-//{
-//    [self setLeftPaddingForTextField:self.startLocationField];
-//    [self setLeftPaddingForTextField:self.endLocationField];
-//}
 
 -(void)configureListButton
 {
@@ -217,13 +159,27 @@
 // this method is used to display geocoding in real time as they enter values
 -(void) geocodeAddressStringToDisplay: (NSString *) addressString
 {
-    [self.geocoder geocodeAddressString:addressString completionHandler:^(NSArray *placemarks, NSError *error){
-        self.displayedData = placemarks;
+    NSLog(@"In geocodeAddressStringToDisplay");
+    // Suggests
+    [self.geocoder geocodeAddressString:addressString inRegion:self.chicagoRegion completionHandler:^(NSArray *placemarks, NSError *error){
+        
+        // Filter placemarks because the above method doesn't automatically do that :(
+        NSMutableArray *filteredPlacemarks = [[NSMutableArray alloc] init];
+        for (CLPlacemark *placemark in placemarks)
+        {
+            if ([self.chicagoRegion containsCoordinate:placemark.location.coordinate])
+            {
+                [filteredPlacemarks addObject:placemark];
+            }
+        }
+        self.displayedData = [filteredPlacemarks copy];
+        
         [self.addressOptionsTableView reloadData];
         if (error) {
             NSLog(@"Error in geocoder: %@", error);
         }
     }];
+    
 }
 
 // read these three functions from top to bottom, start address leads to end address, which then draws the stations
@@ -302,14 +258,26 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
     CLLocationDegrees longitude = station.longitude;
     marker.position = CLLocationCoordinate2DMake(latitude, longitude);
     marker.title = station.stationName;
+    UIColor *divvyColor = [[UIColor alloc] initWithRed:(61./255) green:(183./255) blue:(228/255.) alpha:1];
+    marker.icon = [GMSMarker markerImageWithColor:divvyColor];
+    marker.snippet = [NSString stringWithFormat:@"Available Bikes: %d\rAvailable Docks: %d",
+                      station.availableBikes, station.availableDocks];
     marker.map = mapView_;
 }
+
+//- (NSString *)getMarkerTitleForStation:(BGLStationObject *)station
+//{
+//    NSString *title = [NSString stringWithFormat:@"%@\rAvailable Bikes: %d\rAvailable Docks:%d",
+//                       station.stationName, station.availableBikes, station.availableDocks];
+//    return title;
+//}
 
 - (void)addMarkerAtLocation:(CLLocation *)location withTitle:(NSString *)title
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = location.coordinate;
     marker.title = title;
+    marker.icon = [GMSMarker markerImageWithColor:[UIColor blackColor]];
     marker.map = mapView_;
 }
 
@@ -615,11 +583,12 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     return _geocoder;
 }
 
+#define CHICAGO_RADIUS 100000
 - (CLRegion *)chicagoRegion
 {
     if (!_chicagoRegion) {
-        CLLocationCoordinate2D chicago = CLLocationCoordinate2DMake(41.8500, 87.6500);
-        _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:100 identifier:@"Chicago"];
+        CLLocationCoordinate2D chicago = CLLocationCoordinate2DMake(41.8500, -87.6500);
+        _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:CHICAGO_RADIUS identifier:@"Chicago"];
     }
     return _chicagoRegion;
 }
