@@ -125,11 +125,11 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
         UIColor * polylineColor;
         
         if (transportationType == kTransportationTypeWalking)
-            polylineColor = [UIColor blueColor];
+            polylineColor = [UIColor darkGrayColor];
         else if (transportationType == kTransportationTypePublicTransit)
             polylineColor = [UIColor redColor];
         else
-            polylineColor = [UIColor colorWithRed:0 green:100/255.0 blue:0.0 alpha:1.0f];
+            polylineColor = [UIColor blueColor];
         
         polyline.strokeColor = polylineColor;
         polyline.strokeWidth = 4.0f;
