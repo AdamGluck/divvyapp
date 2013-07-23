@@ -108,35 +108,24 @@
                                     <outletCollection property="gestureRecognizers" destination="ILR-se-QsC" appends="YES" id="U75-pf-Isl"/>
                                 </connections>
                             </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WCy-NC-xSA">
-                                <color key="backgroundColor" red="0.23921568630000001" green="0.71764705880000002" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="74" id="YdD-cq-vYs"/>
-                                    <constraint firstAttribute="width" constant="18" id="Yql-DZ-NUj"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <containerView hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ob-Af-fb2">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
                                     <segue destination="vkV-Vr-cns" kind="embed" id="Aeg-4w-u73"/>
                                 </connections>
                             </containerView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b8C-1R-y7t">
+                                <color key="backgroundColor" red="0.23921568630000001" green="0.71764705880000002" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="b8C-1R-y7t" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" constant="302" id="0jZ-ex-eoL"/>
                             <constraint firstItem="6ob-Af-fb2" firstAttribute="centerY" secondItem="DGJ-Wd-Qom" secondAttribute="centerY" type="default" id="1JR-gN-Z1e"/>
                             <constraint firstAttribute="bottom" secondItem="eNo-fx-uOf" secondAttribute="bottom" constant="473" id="BPF-XB-h85"/>
                             <constraint firstItem="qcZ-8N-pNX" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" constant="73" id="Lcj-Ld-Gsk"/>
                             <constraint firstItem="6ob-Af-fb2" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="MCj-I6-fVH"/>
-                            <constraint firstItem="WCy-NC-xSA" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="QDD-1g-9sz"/>
+                            <constraint firstItem="b8C-1R-y7t" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" constant="438" id="MT3-w6-IKh"/>
                             <constraint firstItem="6ob-Af-fb2" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="SMv-kD-DUe"/>
                             <constraint firstItem="qcZ-8N-pNX" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="YqJ-e0-R7N"/>
                             <constraint firstItem="eNo-fx-uOf" firstAttribute="leading" secondItem="DGJ-Wd-Qom" secondAttribute="leading" type="default" id="ZPN-lv-5sS"/>
@@ -144,7 +133,8 @@
                             <constraint firstItem="eNo-fx-uOf" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="kBJ-tH-dkk"/>
                             <constraint firstItem="qcZ-8N-pNX" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="muX-yD-00F"/>
                             <constraint firstItem="eNo-fx-uOf" firstAttribute="top" secondItem="DGJ-Wd-Qom" secondAttribute="top" constant="-19" id="tTz-z8-N3i"/>
-                            <constraint firstAttribute="bottom" secondItem="WCy-NC-xSA" secondAttribute="bottom" constant="36" id="yjT-4c-EA0"/>
+                            <constraint firstAttribute="bottom" secondItem="b8C-1R-y7t" secondAttribute="bottom" constant="36" id="uHW-P4-epu"/>
+                            <constraint firstItem="b8C-1R-y7t" firstAttribute="trailing" secondItem="DGJ-Wd-Qom" secondAttribute="trailing" type="default" id="wY6-Ai-cfe"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Route Planner" id="zFQ-zk-42S">
@@ -165,7 +155,7 @@
                         <outlet property="cancelButton" destination="DyR-FI-k21" id="SAT-y8-fz6"/>
                         <outlet property="containerView" destination="6ob-Af-fb2" id="egR-Iw-bkr"/>
                         <outlet property="endLocationField" destination="lQb-h4-qzj" id="fID-BU-ydW"/>
-                        <outlet property="listButton" destination="WCy-NC-xSA" id="w1U-ZP-7Po"/>
+                        <outlet property="listToggle" destination="b8C-1R-y7t" id="EpR-2c-xpg"/>
                         <outlet property="startLocationField" destination="i0L-xR-ArA" id="s07-Og-56J"/>
                     </connections>
                 </viewController>
@@ -176,20 +166,20 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="185" y="-373"/>
+            <point key="canvasLocation" x="57" y="-374"/>
         </scene>
         <!--Divvy Direction View Controller-->
         <scene sceneID="RjK-Pl-UJ4">
             <objects>
                 <viewController id="vkV-Vr-cns" customClass="DivvyDirectionViewController" sceneMemberID="viewController">
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="e9P-h5-C0D">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="567"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="566"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="SGv-UH-kBo">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="558" id="PVb-fi-Q8r"/>
+                                    <constraint firstAttribute="height" constant="551" id="RkT-i3-49w"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="77" id="pjq-KA-aHT">
@@ -262,12 +252,14 @@
         <class className="DivvyMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
             <relationships>
+                <relationship kind="action" name="cancelPressed:"/>
+                <relationship kind="action" name="touchedButton:"/>
                 <relationship kind="outlet" name="addressOptionsTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="barHolderView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="containerView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="endLocationField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="listButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="listToggle" candidateClass="UIView"/>
                 <relationship kind="outlet" name="startLocationField" candidateClass="UITextField"/>
             </relationships>
         </class>
@@ -275,9 +267,6 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
     </classes>
-    <resources>
-        <image name="divvy_logo.jpg" width="160" height="160"/>
-    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

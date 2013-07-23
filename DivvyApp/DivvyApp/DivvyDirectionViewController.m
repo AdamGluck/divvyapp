@@ -50,48 +50,70 @@
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-
-    UITextView * cellText = (UITextView *)[cell viewWithTag:1];
-    UITextView * detailText = (UITextView *)[cell viewWithTag:2];
     
     NSDictionary * directionDictionary = self.stepsArray[indexPath.section][indexPath.row];
     NSString * directionString = directionDictionary[@"html_instructions"];
     directionString = [self stringByStrippingHTML:directionString];
-    cellText.text = directionString;
+    if ([self.stepsArray[indexPath.section] count] - 1 == indexPath.row){
+        directionString = [self newLineDestinationWillBeOn:directionString];
+    }
+    directionString = NSLocalizedString(directionString, nil);
     
-    detailText.text = [[NSString alloc] initWithFormat:@"%@ (%@)", directionDictionary[@"distance"][@"text"], directionDictionary[@"duration"][@"text"]];
+    UITextView * cellText = (UITextView *)[cell viewWithTag:1];
+    UITextView * detailText = (UITextView *)[cell viewWithTag:2];
+    cellText.text = directionString;
+    detailText.text = [[NSString alloc] initWithFormat:@"%@ (%@)", NSLocalizedString(directionDictionary[@"distance"][@"text"], nil), NSLocalizedString(directionDictionary[@"duration"][@"text"], nil)];
     
     return cell;
 }
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    NSString * titleString;
     if (section == 0){
-        return @"Walking route";
+        titleString = @"Walking route";
     } else if (section == 1){
-        return @"Biking Route";
+        titleString = @"Biking Route";
     } else {
-        return @"Walking route";
+        titleString = @"Walking route";
     }
+    
+    return NSLocalizedString(titleString, nil);
 }
 
 #pragma mark - UITableView Utilities
 
--(NSString *) stringByStrippingHTML: (NSString *) string {
+-(NSString *) stringByStrippingHTML: (NSString *) string
+{
     NSRange r;
     while ((r = [string rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
         string = [string stringByReplacingCharactersInRange:r withString:@""];
     return string;
 }
 
--(void)loadTableViewData{
+-(NSString *) newLineDestinationWillBeOn: (NSString *) string
+{
+    NSMutableString * mutableString = [[NSMutableString alloc] initWithString:string];
+    NSRange r;
+    while ((r = [string rangeOfString:@"Destination will be on the" options:NSRegularExpressionSearch]).location != NSNotFound){
+        [mutableString insertString:@"\n" atIndex:r.location];
+        break;
+    }
+    
+    return mutableString;
+}
+
+-(void)loadTableViewData
+{
     [self.tableView reloadData];
 }
 
 #pragma mark - Property Handling
 #pragma mark - Property Utilities 
 
--(void) fillStepsArray{
+-(void) fillStepsArray
+{
+    [self.stepsArray removeAllObjects];
     for (int i = 0; i < 3; i ++){
         [self.stepsArray addObject:self.directions[i][@"steps"]];
     }
@@ -103,7 +125,6 @@
 {
     if (!_stepsArray){
         _stepsArray = [[NSMutableArray alloc] init];
-
     }
     return _stepsArray;
 }

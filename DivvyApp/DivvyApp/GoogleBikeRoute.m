@@ -111,17 +111,14 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
     
 }
 
-- (void)buildPolyline:(NSDictionary *)json {
-    
+- (void)buildPolyline:(NSDictionary *)json
+{
     if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)] && json && [json[@"routes"] count] > 0){
-        
         NSDictionary *routes = [json objectForKey:@"routes"][0];
-        
         NSDictionary *route = [routes objectForKey:@"overview_polyline"];
         NSString *overview_route = [route objectForKey:@"points"];
         GMSPath *path = [GMSPath pathFromEncodedPath:overview_route];
         GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
-        
         UIColor * polylineColor;
         
         if (transportationType == kTransportationTypeWalking)
@@ -132,16 +129,15 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
             polylineColor = [UIColor blueColor];
         
         polyline.strokeColor = polylineColor;
-        polyline.strokeWidth = 4.0f;
-        
+        polyline.strokeWidth = 5.0f;
         [self.delegate routeWithPolyline:polyline];
     }
-    
 }
 
 #pragma mark - Class Public Methods
 
--(GoogleBikeRoute *) initWithWaypoints: (NSArray *) waypoints sensorStatus: (BOOL) sensorOn andDelegate: (id) delegate{
+-(GoogleBikeRoute *) initWithWaypoints: (NSArray *) waypoints sensorStatus: (BOOL) sensorOn andDelegate: (id) delegate
+{
     self = [super init];
     
     if (self){
@@ -154,17 +150,13 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 }
 
 -(void) goWithTransportationType:(GoogleRouteTransportationType)type {
-    
     NSString * sensor;
-    
     if (self.appDoesUseGPS)
         sensor = @"true";
     else
         sensor = @"false";
-    
     transportationType = type;
     NSDictionary * query = @{@"sensor" : sensor, @"waypoints": self.waypoints};
-    
     [self setDirectionsQuery:query];
 }
 

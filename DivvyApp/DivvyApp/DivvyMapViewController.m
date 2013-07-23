@@ -13,7 +13,6 @@
 #import "GoogleBikeRoute.h"
 #import "DivvyDirectionViewController.h"
 #import <AddressBookUI/AddressBookUI.h>
-//#import <QuartzCore/QuartzCore.h>
 
 @interface DivvyMapViewController ()
 <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
@@ -22,7 +21,7 @@
     BOOL movedTextFieldsLeft;
     CGPoint originalTextFieldViewCenter;
     CGPoint originalMapViewCenter;
-    CGPoint originalListButtonCenter;
+    CGPoint originalListToggleCenter;
     CGPoint originalPanTouchMapViewCenter;
 }
 
@@ -47,7 +46,8 @@
 @property (strong, nonatomic) IBOutlet UITableView *addressOptionsTableView;
 
 // barbuttonitems
-@property (strong, nonatomic) IBOutlet UIButton *listButton;
+
+@property (strong, nonatomic) IBOutlet UIView *listToggle;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
 // views
@@ -124,7 +124,6 @@
 {
     [self setLeftPaddingForTextField:self.startLocationField];
     [self setLeftPaddingForTextField:self.endLocationField];
-    
 }
 
 
@@ -132,17 +131,14 @@
 {
     UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     pan.delegate = self;
-    [self.listButton addGestureRecognizer:pan];
+    [self.listToggle addGestureRecognizer:pan];
 }
 
 -(void)configureOriginalCenters
 {
-    originalListButtonCenter = self.listButton.center;
+    originalListToggleCenter = self.listToggle.center;
     originalMapViewCenter = mapView_.center;
     originalTextFieldViewCenter = self.barHolderView.center;
-    NSLog(@"originalListButtonCenter.x = %f, .y = %f", originalListButtonCenter.x, originalListButtonCenter.y);
-    NSLog(@"originalMapViewCenter.x = %f, .y = %f", originalMapViewCenter.x, originalMapViewCenter.y);
-    NSLog(@"originalTextFieldViewCenter.x = %f, .y = %f", originalTextFieldViewCenter.x, originalTextFieldViewCenter.y);
 }
 
 #pragma mark - Configuration Utilities
@@ -158,7 +154,6 @@
 // this method is used to display geocoding in real time as they enter values
 -(void) geocodeAddressStringToDisplay: (NSString *) addressString
 {
-    NSLog(@"In geocodeAddressStringToDisplay");
     // Suggests
     [self.geocoder geocodeAddressString:addressString inRegion:self.chicagoRegion completionHandler:^(NSArray *placemarks, NSError *error){
         
@@ -178,14 +173,12 @@
             NSLog(@"Error in geocoder: %@", error);
         }
     }];
-    
 }
 
-// read these three functions from top to bottom, start address leads to end address, which then draws the stations
+/* read these three functions from top to bottom, start address leads to end address, which then draws the stations */
 - (void)geocodeStartAddress
 {
     [self moveFieldsRight];
-    
     [self.geocoder geocodeAddressString:self.startAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -223,6 +216,7 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
 {
     polylineCount = 0;
     [mapView_ clear];
+    [self.directionsArray removeAllObjects];
     BGLStationObject *pickupBikeStation = [self.dataAccess grabNearestStationTo:self.startLocation withOption:kNearestStationWithBike];
     BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
     
@@ -284,7 +278,7 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
 {
     polyline.map = mapView_;
     if (++polylineCount == 3){
-        self.listButton.hidden = NO;
+        self.listToggle.hidden = NO;
     }
 }
 
@@ -348,7 +342,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     if (indexPath.row < [self.displayedData count]){
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
         UITextView * addressLabel = [self enterLocationCellTextView:cell];
-        addressLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
+        addressLabel.text = NSLocalizedString(ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO), nil);
         cell.userInteractionEnabled = YES;
     } else {
         cell.textLabel.text = @"";
@@ -372,7 +366,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     return backGroundView;
 }
 
-#pragma mark - --User Interactions: Textfields, keyboards, and buttons--
+#pragma mark - --User Interactions: UITextfields, Keyboard, and UIButtons--
 #pragma mark - UITextFieldDelegate Utilities
 -(void) makeStartFieldCurrentLocation
 {
@@ -456,7 +450,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     self.addressOptionsTableView.hidden = NO;
 }
 
-#pragma mark - IBActions Implementaiton
+#pragma mark - StoryBoard Button IBActions Handling
 
 - (IBAction)cancelPressed:(id)sender
 {
@@ -478,6 +472,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 {
     if (recognizer.state == UIGestureRecognizerStateBegan){
         originalPanTouchMapViewCenter = mapView_.center;
+        if (originalPanTouchMapViewCenter.x > 0) [self presentDirections];
         self.containerView.hidden = NO;
     }
     
@@ -489,20 +484,20 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     // we have to store the original map view touch so that we know if it was on or off screen originally, and thus which direction we should animate in
     if (recognizer.state == UIGestureRecognizerStateEnded){
         CGRect screenSize = [[UIScreen mainScreen] bounds];
-        CGFloat halfScreenSizeWidth = .5 * screenSize.size.width;
-        
-        if (mapView_.center.x < halfScreenSizeWidth && originalPanTouchMapViewCenter.x > 0){
+        CGFloat screenSizeWidth = screenSize.size.width;
+        if (mapView_.center.x < screenSizeWidth * .5 && originalPanTouchMapViewCenter.x > 0){
             [self presentDirections];
             [UIView animateWithDuration:.25 animations:^{[self moveCoverViewOffScreen];}];
         }
-        if (mapView_.center.x >= -1 * halfScreenSizeWidth && originalPanTouchMapViewCenter.x < 0){
+        if (mapView_.center.x >= -1 * screenSizeWidth * .5 && originalPanTouchMapViewCenter.x < 0){
             [UIView animateWithDuration:.25 animations:^{ [self moveCoverViewOnScreen]; } completion:^(BOOL finished){ self.containerView.hidden = YES; }];
         }
     }
 }
 
-#pragma mark - UIGestureRecognizerDelegate utilities
--(void)presentDirections{
+#pragma mark - UIGestureRecognizerDelegate Utilities
+-(void)presentDirections
+{
     for (UIViewController * viewController in self.childViewControllers){
         if ([viewController class] == [DivvyDirectionViewController class]){
             DivvyDirectionViewController * directionController = (DivvyDirectionViewController*) viewController;
@@ -515,7 +510,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 -(void)moveCoverViewOnScreen
 {
     mapView_.center = originalMapViewCenter;
-    self.listButton.center = originalListButtonCenter;
+    self.listToggle.center = originalListToggleCenter;
     self.barHolderView.center = originalTextFieldViewCenter;
 }
 
@@ -523,14 +518,14 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 {
     mapView_.center = CGPointMake(originalMapViewCenter.x - 320, originalMapViewCenter.y);
     self.barHolderView.center = CGPointMake(originalTextFieldViewCenter.x - 320, originalTextFieldViewCenter.y);
-    self.listButton.center = CGPointMake(originalListButtonCenter.x - 302, originalListButtonCenter.y);
+    self.listToggle.center = CGPointMake(originalListToggleCenter.x - 302, originalListToggleCenter.y);
 }
 
 -(void)moveViewByTranslationDerivedFromTouch:(CGPoint) point
 {
     CGFloat translation = self.view.frame.size.width - point.x;
     mapView_.center = [self newCenterFromOriginalCenter:originalMapViewCenter andTranslation:translation];
-    self.listButton.center = [self newCenterFromOriginalCenter:originalListButtonCenter andTranslation:translation];
+    self.listToggle.center = [self newCenterFromOriginalCenter:originalListToggleCenter andTranslation:translation];
     self.barHolderView.center = [self newCenterFromOriginalCenter:originalTextFieldViewCenter andTranslation:translation];
 }
 
@@ -584,22 +579,20 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     return _chicagoRegion;
 }
 
--(NSMutableArray *) directionsArray{
-    
+-(NSMutableArray *) directionsArray
+{
     if (!_directionsArray){
         _directionsArray = [[NSMutableArray alloc] init];
     }
-    
     return _directionsArray;
 }
 
--(BGLDivvyDataAccess *) dataAccess{
-    
+-(BGLDivvyDataAccess *) dataAccess
+{
     if (!_dataAccess){
         _dataAccess = [[BGLDivvyDataAccess alloc] init];
         _dataAccess.delegate = self;
     }
-    
     return _dataAccess;
 }
 
