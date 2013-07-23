@@ -28,6 +28,8 @@
 @property (strong, nonatomic) CLLocationManager * locationManager;
 
 // start location end location properties
+@property (strong, nonatomic) NSString *startAddress;
+@property (strong, nonatomic) NSString *endAddress;
 @property (strong, nonatomic) CLLocation *startLocation;
 @property (strong, nonatomic) CLLocation *endLocation;
 @property (strong, nonatomic) IBOutlet UITextField *startLocationField;
@@ -55,7 +57,7 @@
 
 
 #pragma mark - Views
-#pragma mark - viewDidLoad
+#pragma mark - View Life Cycle Implementation
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -134,7 +136,8 @@
 #pragma mark - Geocoding functions
 
 // this method is used to display geocoding in real time as they enter values
--(void) geocodeAddressStringToDisplay: (NSString *) addressString{
+-(void) geocodeAddressStringToDisplay: (NSString *) addressString
+{
     [self.geocoder geocodeAddressString:addressString completionHandler:^(NSArray *placemarks, NSError *error){
         self.displayedData = placemarks;
         [self.addressOptionsTableView reloadData];
@@ -238,7 +241,8 @@
 
 #pragma mark - GoogleBikeRouteDelegate implementation
 
--(void) routeWithPolyline: (GMSPolyline *) polyline{
+-(void) routeWithPolyline: (GMSPolyline *) polyline
+{
     polyline.map = mapView_;
     if (++polylineCount == 3){
         self.cancelButton.hidden = YES;
@@ -248,7 +252,8 @@
 
 static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error finding part of your route, make sure you entered the address correctly and try again.";
 
--(void) directionsFromServer: (NSDictionary *) directionsDictionary{
+-(void) directionsFromServer: (NSDictionary *) directionsDictionary
+{
     NSArray * routesArray = directionsDictionary[@"routes"];
     if (routesArray.count){
         NSDictionary * routesDictionary = routesArray[0];
@@ -271,9 +276,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 {
     if (error.code == kCLErrorDenied) [manager stopUpdatingLocation];
 }
-
-
-
 
 #pragma mark - UITableViewController methods
 #pragma mark - UITableViewDelegate Functions
@@ -335,7 +337,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     backGroundView.alpha = .6f;
     return backGroundView;
 }
-
 
 #pragma mark - IBActions Implementaiton
 
@@ -427,20 +428,25 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 #pragma mark - Transitions
-#pragma mark - UIGestureRecognizerDelegate
+#pragma mark - UIGestureRecognizerDelegate handlers
 
 -(void) handlePan: (UIPanGestureRecognizer *) recognizer
 {
+    if (recognizer.state == UIGestureRecognizerStateBegan) self.containerView.hidden = NO;
     
+    if (recognizer.state == UIGestureRecognizerStateChanged){
+        CGPoint touchDown = [recognizer locationInView:self.view];
+        NSLog(@"touchDown.x == %f", touchDown.x);
+    }
 }
+
 #pragma mark - StoryboardSegue
 
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([self.directionsArray count] == 3) ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
 }
+
 #pragma mark - Additional Necessities
-
-
 #pragma mark - Lazy Instantiations
 
 - (NSString *)startAddress
@@ -501,8 +507,5 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     
     return _dataAccess;
 }
-
-
-
 
 @end

@@ -18,19 +18,6 @@
 
 #pragma mark - boiler plate
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
--(void)viewWillAppear:(BOOL)animated{
-    self.navigationController.navigationBar.hidden = NO;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -55,7 +42,6 @@
 
 #pragma mark - Table view data source
 
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
@@ -64,15 +50,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSLog(@"number of rows in section");
     // Return the number of rows in the section.
-    return 0// [self.stepsArray[section] count];
+    return 1;// [self.stepsArray[section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
+
     UITextView * cellText = (UITextView *)[cell viewWithTag:1];
     UITextView * detailText = (UITextView *)[cell viewWithTag:2];
     

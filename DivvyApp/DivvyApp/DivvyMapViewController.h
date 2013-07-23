@@ -10,8 +10,7 @@
 
 @interface DivvyMapViewController : UIViewController
 
-@property (strong, nonatomic) NSString *startAddress;
-@property (strong, nonatomic) NSString *endAddress;
+
 
 
 @end

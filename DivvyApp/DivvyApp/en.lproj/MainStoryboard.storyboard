@@ -324,10 +324,10 @@
             </objects>
             <point key="canvasLocation" x="668" y="-503"/>
         </scene>
-        <!--Divvy Direction View Controller-->
+        <!--View Controller-->
         <scene sceneID="RjK-Pl-UJ4">
             <objects>
-                <viewController id="vkV-Vr-cns" customClass="DivvyDirectionViewController" sceneMemberID="viewController">
+                <viewController id="vkV-Vr-cns" sceneMemberID="viewController">
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="e9P-h5-C0D">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="567"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -372,6 +372,10 @@
                                         </constraints>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="vkV-Vr-cns" id="pUn-zM-y7w"/>
+                                    <outlet property="delegate" destination="vkV-Vr-cns" id="tld-6B-nQw"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -386,13 +390,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7p-2H-i5C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="177" y="477"/>
         </scene>
     </scenes>
     <resources>
         <image name="divvy_logo.jpg" width="160" height="160"/>
     </resources>
     <classes>
-        <class className="DivvyDirectionViewController" superclassName="UITableViewController">
+        <class className="DivvyDirectionViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyDirectionViewController.h"/>
         </class>
         <class className="DivvyHomeViewController" superclassName="UIViewController">
@@ -405,8 +410,6 @@
         <class className="DivvyMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
             <relationships>
-                <relationship kind="action" name="cancelPressed:"/>
-                <relationship kind="action" name="touchedButton:"/>
                 <relationship kind="outlet" name="addressOptionsTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="barHolderView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
