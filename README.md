@@ -16,8 +16,8 @@ Bugs:
         each other and cause the app to crash.  Probably we should test for this and recall the methods to make sure the
         trip loads correctly.  This is, of course, a little messy, but I am not sure how else to solve it...
         The thing that goes against this error though is that the polylines still route correctly when the error occurs
-        
-     Clearly still more exploration needs to happen here
+
+Clearly still more exploration needs to happen here
      
      
 
