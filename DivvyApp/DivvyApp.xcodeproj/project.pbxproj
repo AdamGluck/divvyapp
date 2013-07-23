@@ -220,6 +220,15 @@
 			name = Storyboard;
 			sourceTree = "<group>";
 		};
+		0F495E57179E0C0D005D6F39 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				0F4CF4AA1783A67600889B08 /* AppDelegate.h */,
+				0F4CF4AB1783A67600889B08 /* AppDelegate.m */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
 		0F4CF48F1783A67600889B08 = {
 			isa = PBXGroup;
 			children = (
@@ -270,8 +279,7 @@
 				0F495E4E179DCCFA005D6F39 /* View Controllers */,
 				0F495E4A179DCCC3005D6F39 /* API */,
 				0F495E51179DCD65005D6F39 /* Custom NSObjects */,
-				0F4CF4AA1783A67600889B08 /* AppDelegate.h */,
-				0F4CF4AB1783A67600889B08 /* AppDelegate.m */,
+				0F495E57179E0C0D005D6F39 /* AppDelegate */,
 				0F495E53179DCD9E005D6F39 /* Old */,
 				0F4CF4A21783A67600889B08 /* Supporting Files */,
 			);

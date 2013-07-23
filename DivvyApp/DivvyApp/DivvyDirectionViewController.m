@@ -16,28 +16,6 @@
 
 @implementation DivvyDirectionViewController
 
-#pragma mark - lazy instantiation
-
--(NSMutableArray *) stepsArray{
-    if (!_stepsArray){
-        _stepsArray = [[NSMutableArray alloc] init];
-        
-        for (int i = 0; i < 3; i ++){
-            [_stepsArray addObject:self.directions[i][@"steps"]];
-        }
-    }
-    
-    return _stepsArray;
-}
--(NSArray *) directions{
-    if (!_directions){
-        _directions = [[NSArray alloc] init];
-        
-    }
-    
-    return _directions;
-}
-
 #pragma mark - boiler plate
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -49,18 +27,17 @@
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.hidden = NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSLog(@"viewDidLoad for directions view controller with %@", self.stepsArray);
+    [self addSwipegestureRecognizer];
+}
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
+-(void) addSwipegestureRecognizer{
     UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRecognized:)];
     swipe.delegate = self;
     [self.view addGestureRecognizer:swipe];
@@ -121,17 +98,6 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
-
 #pragma mark - Utility Functions
 
 -(NSString *) stringByStrippingHTML: (NSString *) string {
@@ -139,6 +105,26 @@
     while ((r = [string rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
         string = [string stringByReplacingCharactersInRange:r withString:@""];
     return string;
+}
+
+#pragma mark - lazy instantiation
+
+-(NSMutableArray *) stepsArray{
+    if (!_stepsArray){
+        _stepsArray = [[NSMutableArray alloc] init];
+        for (int i = 0; i < 3; i ++){
+            [_stepsArray addObject:self.directions[i][@"steps"]];
+        }
+    }
+    
+    return _stepsArray;
+}
+-(NSArray *) directions{
+    if (!_directions){
+        _directions = [[NSArray alloc] init];
+    }
+    
+    return _directions;
 }
 
 @end

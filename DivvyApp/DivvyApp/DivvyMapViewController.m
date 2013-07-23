@@ -17,6 +17,7 @@
 
 @interface DivvyMapViewController () <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>{
     int polylineCount;
+    BOOL movedTextFieldsLeft;
 }
 
 // grabbing global location data properties
@@ -35,11 +36,11 @@
 // properties that are used to store and display data about directions
 @property (strong, nonatomic) NSArray * displayedData; // this holds suggested directions to display in the enterInstructionsView
 @property (strong,nonatomic) NSMutableArray * directionsArray; // this holds the direction data returned from google maps to be displayed in the UITableView on the next screen
-@property (strong, nonatomic) IBOutlet UITableView *enterInstructionsView;
+@property (strong, nonatomic) IBOutlet UITableView *addressOptionsTableView;
 
 // barbuttonitems 
 @property (strong, nonatomic) IBOutlet UIButton *listButton;
-@property (strong, nonatomic) IBOutlet UIButton *goButton;
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 @property (strong, nonatomic) IBOutlet UIView *barHolderView;
 
 
@@ -49,30 +50,27 @@
     GMSMapView *mapView_;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.hidden = YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    self.dataAccess = [[BGLDivvyDataAccess alloc] init];
-    
-    self.dataAccess.delegate = self;
-    // for testing
-    // "latitude":41.8739580629,"longitude":-87.6277394859 should be the station on State St & Harrison St
     //[self configureBarHolderView];
     //[self configureNavigationBar];
     [self configureLocationManager];
     [self loadMap];
     [self configureTableView];
-    
+    [self configureTextFields];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidShow)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
-    
-    [self.dataAccess fillStationDataASynchronously]; // so we can use this data later
-    
-}
+    [self.dataAccess fillStationDataASynchronously];
+    self.navigationController.navigationBar.hidden = YES;
 
+}
 
 #pragma mark - Geocoding functions
 
@@ -80,18 +78,18 @@
 -(void) geocodeAddressStringToDisplay: (NSString *) addressString{
     [self.geocoder geocodeAddressString:addressString completionHandler:^(NSArray *placemarks, NSError *error){
         self.displayedData = placemarks;
-        [self.enterInstructionsView reloadData];
+        [self.addressOptionsTableView reloadData];
         if (error) {
             NSLog(@"Error in geocoder: %@", error);
         }
     }];
-    
 }
 
 // read these three functions from top to bottom, start address leads to end address, which then draws the stations
 - (void)geocodeStartAddress
 {
-
+    [self resizeLocationFieldsByAmount:75.0 andSetCancelHidden:YES];
+    movedTextFieldsLeft = NO;
     [self.geocoder geocodeAddressString:self.startAddress
                                inRegion:self.chicagoRegion
                       completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -105,7 +103,7 @@
                               NSLog(@"Error in geocoder: %@", error);
                               self.startLocation = self.locationManager.location;
                               [self geocodeEndAddress];
-                          }else{
+                          } else{
                               [self geocodeEndAddress];
                           }
                       }];
@@ -166,14 +164,23 @@
 
 #pragma mark - map drawing functions
 
+- (void) configureTextFields{
+    [self setLeftPaddingForTextField:self.startLocationField];
+    [self setLeftPaddingForTextField:self.endLocationField];
+}
+
+-(void) setLeftPaddingForTextField: (UITextField *) textField{
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+    textField.leftView = paddingView;
+    textField.leftViewMode = UITextFieldViewModeAlways;
+}
+
 
 - (void)loadMap
 {
-    NSLog(@"Loading map view");
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:12]; // Chicago (zoomed out)
     mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
     mapView_.myLocationEnabled = YES;
-    
     [self.view insertSubview:mapView_ atIndex:0];
 }
 
@@ -208,23 +215,17 @@
 #pragma mark - GoogleBikeRouteDelegate functions
 
 -(void) routeWithPolyline: (GMSPolyline *) polyline{
-    
     polyline.map = mapView_;
-    
-    if (++polylineCount == 3) {
-
-        self.goButton.hidden = YES;
+    if (++polylineCount == 3){
+        NSLog(@"cancel button should display");
+        self.cancelButton.hidden = YES;
         self.listButton.hidden = NO;
-
     }
-    
 }
 
 
 -(void) directionsFromServer: (NSDictionary *) directionsDictionary{
-   
     NSArray * routesArray = directionsDictionary[@"routes"];
-    
     if (routesArray.count){
         NSDictionary * routesDictionary = routesArray[0];
         NSDictionary * legsDictionary = routesDictionary[@"legs"][0];
@@ -233,22 +234,18 @@
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Where?" message:@"There was an error finding part of your route, make sure you entered the address correctly and try again" delegate:self cancelButtonTitle:@"I'll try again." otherButtonTitles: nil];
         [alert show];
     }
-    
 }
 
 #pragma mark - Storyboard Functions
 
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    
-    if ([self.directionsArray count] == 3)
-        ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
-    
+    if ([self.directionsArray count] == 3) ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
 }
 
 #pragma mark - UITableView Configuration
 
 -(void) configureTableView{
-    self.enterInstructionsView.backgroundColor = [UIColor clearColor];
+    self.addressOptionsTableView.backgroundColor = [UIColor clearColor];
 }
 
 
@@ -256,13 +253,10 @@
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
-    
     UITextView * textView = (UITextView*)[cell viewWithTag:1];
     if (self.startLocationField.editing) self.startLocationField.text = textView.text;
     if (self.endLocationField.editing) self.endLocationField.text = textView.text;
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
 }
@@ -279,8 +273,8 @@
 {
     // Return the number of rows in the section.
     
-    if ([self.displayedData count] < 4)
-        return 4;
+    if ([self.displayedData count] < 5)
+        return 5;
     else
         return [self.displayedData count];
 }
@@ -294,7 +288,6 @@
     backGroundView.backgroundColor = [UIColor blackColor];
     backGroundView.alpha = .6f;
     cell.backgroundView = backGroundView;
-    
     if (indexPath.row < [self.displayedData count]){
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
         UITextView * addressLabel = (UITextView*)[cell viewWithTag:1];
@@ -306,115 +299,108 @@
         cell.userInteractionEnabled = NO;
     }
     
-    
     return cell;
 }
 
 #pragma mark - CLLocationManagerDelegate
 
 -(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    
     self.locationManager = manager;
-    
 }
 
 -(void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    
-    if (error.code == kCLErrorDenied)
-        [manager stopUpdatingLocation];
-    
+    if (error.code == kCLErrorDenied) [manager stopUpdatingLocation];
 }
 
 #pragma mark - actions
 
-- (IBAction)startGoing:(id)sender {
-    
-    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0){
-        // this hides the tableview
-        self.enterInstructionsView.hidden = YES;
-        // this dismisses the keyboard
-        [self.view endEditing:YES];
-        
-        // this sets the start address
-        self.startAddress = self.startLocationField.text;
-        // this sets the end address
-        self.endAddress = self.endLocationField.text;
-        
-        // this uses the start and end address variables to geocode a route
-        [self geocodeStartAddress];
-    }
-    
-    self.goButton.backgroundColor = [UIColor clearColor];
+- (IBAction)cancelPressed:(id)sender {
+    [self.view endEditing:YES];
+    self.addressOptionsTableView.hidden = YES;
+    [self resizeLocationFieldsByAmount:75.0 andSetCancelHidden:YES];
+    movedTextFieldsLeft = NO;
 }
 
 - (IBAction)touchedButton:(id)sender {
-    self.goButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:1.0f];
+    self.cancelButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:0.5f];
 }
 
-#pragma mark - UITextField Delegate
-
-// This area below needs to be cleaned up
+#pragma mark - View Modifiers used in response to delegate actions
 
 -(void) makeStartFieldCurrentLocation{
     self.startLocationField.text = @"Current Location";
     self.startLocationField.textColor = [UIColor blueColor];
 }
 
+-(CGRect) resizeRectWidthBy:(CGFloat) amount forView:(UIView *) view{
+    
+    CGRect holderRect = view.frame;
+    holderRect.size.width += amount;
+    
+    return holderRect;
+}
+
+-(void) resizeLocationFieldsByAmount: (CGFloat) amount andSetCancelHidden: (BOOL) hide{
+    [UIView animateWithDuration:0.1
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         self.startLocationField.frame = [self resizeRectWidthBy:amount forView:self.startLocationField];
+                         self.endLocationField.frame = [self resizeRectWidthBy:amount forView:self.endLocationField];
+                     } completion:^(BOOL finished){
+                         self.cancelButton.hidden = hide;
+                     }];
+}
+
+#pragma mark - UITextField Delegate
+
+// This area below needs to be cleaned up
 -(void) textFieldDidBeginEditing:(UITextField *)textField{
     
     // this will make it so that the address string is immediately geocoded and a list of suggestions appear
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
+    if (!movedTextFieldsLeft){
+        [self resizeLocationFieldsByAmount:-75.0 andSetCancelHidden:NO];
+        movedTextFieldsLeft = YES;
+    }
 
-    if (self.endLocationField.text.length > 0 && !self.goButton.hidden) self.goButton.hidden = NO;
-    
-    
 }
+
 
 -(void) keyboardDidShow{
     // this is called from the notification center
-    self.enterInstructionsView.hidden = NO;
+    self.addressOptionsTableView.hidden = NO;
 }
 
 
 -(void) textFieldDidEndEditing:(UITextField *)textField{
+
     if (textField.text.length == 0){
-        self.goButton.hidden = YES;
         if (textField.tag == 1) [self makeStartFieldCurrentLocation];
     }
-
+    
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
 
     [self geocodeAddressStringToDisplay:textField.text];
-    
-    // if the text field is the first one, and the text color is not black (only other case right now is blue) make blue
     if (textField.tag == 1 && self.startLocationField.textColor != [UIColor blackColor]) self.startLocationField.textColor = [UIColor blackColor];
     
-    // will make the go button appear when the text length is greater than 0, this way you can't "go" if you enter no value
-    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0) self.goButton.hidden = NO;
-    
-    // this removes the right bar button item when the text field is cleared by deletion
-    if (textField.tag == 2 && [string isEqualToString:@""] && range.location == 0 && range.length == textField.text.length) self.goButton.hidden = YES;
-    
     return YES;
 }
 
--(BOOL) textFieldShouldClear:(UITextField *)textField{
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
     
-    // this will just remove the right bar button item if the text field is cleared and it is the end location field
-    if (textField.tag == 2) self.goButton.hidden = YES;
+    if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0){
+        self.addressOptionsTableView.hidden = YES;
+        [self.view endEditing:YES];
+        self.startAddress = self.startLocationField.text;
+        self.endAddress = self.endLocationField.text;
+        [self geocodeStartAddress];
+    }
     
     return YES;
 }
-#pragma mark - UITapGestureRecognizer delegate
-
-
-- (IBAction)dismiss:(id)sender {
-    [self.view endEditing:YES];
-    self.enterInstructionsView.hidden = YES;
-}
-
 
 
 #pragma mark - Lazy Instantiations
@@ -466,6 +452,16 @@
     }
     
     return _directionsArray;
+}
+
+-(BGLDivvyDataAccess *) dataAccess{
+    
+    if (!_dataAccess){
+        _dataAccess = [[BGLDivvyDataAccess alloc] init];
+        _dataAccess.delegate = self;
+    }
+    
+    return _dataAccess;
 }
 
 
