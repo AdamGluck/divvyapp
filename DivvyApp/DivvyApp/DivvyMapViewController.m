@@ -46,7 +46,7 @@
 @property (strong,nonatomic) NSMutableArray * directionsArray; // this holds the direction data returned from google maps to be displayed in the UITableView on the next screen
 @property (strong, nonatomic) IBOutlet UITableView *addressOptionsTableView;
 
-// barbuttonitems 
+// barbuttonitems
 @property (strong, nonatomic) IBOutlet UIButton *listButton;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
@@ -108,6 +108,7 @@
     [self.view insertSubview:mapView_ atIndex:0];
 }
 
+
 // to ensure it is at the bottom of stack use after mapView is drawn
 -(void)configureContainerView
 {
@@ -123,7 +124,9 @@
 {
     [self setLeftPaddingForTextField:self.startLocationField];
     [self setLeftPaddingForTextField:self.endLocationField];
+    
 }
+
 
 -(void)configureListButton
 {
@@ -155,13 +158,27 @@
 // this method is used to display geocoding in real time as they enter values
 -(void) geocodeAddressStringToDisplay: (NSString *) addressString
 {
-    [self.geocoder geocodeAddressString:addressString completionHandler:^(NSArray *placemarks, NSError *error){
-        self.displayedData = placemarks;
+    NSLog(@"In geocodeAddressStringToDisplay");
+    // Suggests
+    [self.geocoder geocodeAddressString:addressString inRegion:self.chicagoRegion completionHandler:^(NSArray *placemarks, NSError *error){
+        
+        // Filter placemarks because the above method doesn't automatically do that :(
+        NSMutableArray *filteredPlacemarks = [[NSMutableArray alloc] init];
+        for (CLPlacemark *placemark in placemarks)
+        {
+            if ([self.chicagoRegion containsCoordinate:placemark.location.coordinate])
+            {
+                [filteredPlacemarks addObject:placemark];
+            }
+        }
+        self.displayedData = [filteredPlacemarks copy];
+        
         [self.addressOptionsTableView reloadData];
         if (error) {
             NSLog(@"Error in geocoder: %@", error);
         }
     }];
+    
 }
 
 // read these three functions from top to bottom, start address leads to end address, which then draws the stations
@@ -235,18 +252,30 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
 - (void)addMarkerForStation:(BGLStationObject *)station
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
-    CLLocationDegrees latitude = station.latitude; 
-    CLLocationDegrees longitude = station.longitude; 
+    CLLocationDegrees latitude = station.latitude;
+    CLLocationDegrees longitude = station.longitude;
     marker.position = CLLocationCoordinate2DMake(latitude, longitude);
-    marker.title = station.stationName; 
+    marker.title = station.stationName;
+    UIColor *divvyColor = [[UIColor alloc] initWithRed:(61./255) green:(183./255) blue:(228/255.) alpha:1];
+    marker.icon = [GMSMarker markerImageWithColor:divvyColor];
+    marker.snippet = [NSString stringWithFormat:@"Available Bikes: %d\rAvailable Docks: %d",
+                      station.availableBikes, station.availableDocks];
     marker.map = mapView_;
 }
+
+//- (NSString *)getMarkerTitleForStation:(BGLStationObject *)station
+//{
+//    NSString *title = [NSString stringWithFormat:@"%@\rAvailable Bikes: %d\rAvailable Docks:%d",
+//                       station.stationName, station.availableBikes, station.availableDocks];
+//    return title;
+//}
 
 - (void)addMarkerAtLocation:(CLLocation *)location withTitle:(NSString *)title
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = location.coordinate;
     marker.title = title;
+    marker.icon = [GMSMarker markerImageWithColor:[UIColor blackColor]];
     marker.map = mapView_;
 }
 
@@ -545,11 +574,12 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     return _geocoder;
 }
 
+#define CHICAGO_RADIUS 100000
 - (CLRegion *)chicagoRegion
 {
     if (!_chicagoRegion) {
-        CLLocationCoordinate2D chicago = CLLocationCoordinate2DMake(41.8500, 87.6500);
-        _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:100 identifier:@"Chicago"];
+        CLLocationCoordinate2D chicago = CLLocationCoordinate2DMake(41.8500, -87.6500);
+        _chicagoRegion = [[CLRegion alloc] initCircularRegionWithCenter:chicago radius:CHICAGO_RADIUS identifier:@"Chicago"];
     }
     return _chicagoRegion;
 }
