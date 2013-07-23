@@ -262,8 +262,6 @@
         <class className="DivvyMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
             <relationships>
-                <relationship kind="action" name="cancelPressed:"/>
-                <relationship kind="action" name="touchedButton:"/>
                 <relationship kind="outlet" name="addressOptionsTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="barHolderView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>

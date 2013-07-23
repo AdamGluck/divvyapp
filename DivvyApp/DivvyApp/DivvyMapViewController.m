@@ -15,8 +15,10 @@
 #import <AddressBookUI/AddressBookUI.h>
 //#import <QuartzCore/QuartzCore.h>
 
-@interface DivvyMapViewController () <BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>{
-    int polylineCount;
+@interface DivvyMapViewController ()
+<BGLDivvyDataAccessDelegate, GoogleBikeRouteDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
+{
+    NSInteger polylineCount;
     BOOL movedTextFieldsLeft;
     CGPoint originalTextFieldViewCenter;
     CGPoint originalMapViewCenter;
@@ -71,7 +73,6 @@
 -(void)viewDidAppear:(BOOL)animated{
     [self configureOriginalCenters];
 }
-
 
 #pragma mark - View Configuration
 -(void)configure
@@ -142,7 +143,6 @@
 }
 
 #pragma mark - Configuration Utilities
-
 -(void)setLeftPaddingForTextField:(UITextField *) textField
 {
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
@@ -152,7 +152,6 @@
 
 #pragma mark - --Mapping--
 #pragma mark - Geocoding functions
-
 // this method is used to display geocoding in real time as they enter values
 -(void) geocodeAddressStringToDisplay: (NSString *) addressString
 {
@@ -232,7 +231,6 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
 }
 
 #pragma mark - Google Maps Utilities
-
 // Adds a Google Maps marker at a station
 - (void)addMarkerForStation:(BGLStationObject *)station
 {
@@ -253,7 +251,6 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
 }
 
 #pragma mark - GoogleBikeRouteDelegate implementation
-
 -(void) routeWithPolyline: (GMSPolyline *) polyline
 {
     polyline.map = mapView_;
@@ -278,7 +275,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 #pragma mark - CLLocationManagerDelegate implementation
-
 -(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     self.locationManager = manager;
@@ -291,7 +287,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 
 #pragma mark - --UITableViewController methods--
 #pragma mark - UITableViewDelegate Functions
-
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -302,7 +297,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 #pragma mark - UITableViewDataSourceDelegate Functions
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -336,7 +330,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 #pragma mark - UITableViewDataSourceDelegate Utilities
-
 -(UITextView *)enterLocationCellTextView:(UITableViewCell *)cell
 {
     return (UITextView*)[cell viewWithTag:1];
@@ -352,7 +345,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 
 #pragma mark - --User Interactions: Textfields, keyboards, and buttons--
 #pragma mark - UITextFieldDelegate Utilities
-
 -(void) makeStartFieldCurrentLocation
 {
     self.startLocationField.text = @"Current Location";
@@ -393,7 +385,6 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 #pragma mark - UITextField Delegate
-
 -(void) textFieldDidBeginEditing:(UITextField *)textField
 {
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
