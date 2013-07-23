@@ -113,7 +113,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 
 - (void)buildPolyline:(NSDictionary *)json {
     
-    if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)] && [json[@"routes"] count]){
+    if ([self.delegate respondsToSelector:@selector(routeWithPolyline:)] && json && [json[@"routes"] count] > 0){
         
         NSDictionary *routes = [json objectForKey:@"routes"][0];
         
