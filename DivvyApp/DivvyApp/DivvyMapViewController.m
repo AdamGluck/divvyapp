@@ -41,7 +41,10 @@
 // barbuttonitems 
 @property (strong, nonatomic) IBOutlet UIButton *listButton;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
+
+// views
 @property (strong, nonatomic) IBOutlet UIView *barHolderView;
+@property (strong, nonatomic) IBOutlet UIView *containerView;
 
 
 @end
@@ -50,28 +53,84 @@
     GMSMapView *mapView_;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    self.navigationController.navigationBar.hidden = YES;
-}
 
+#pragma mark - Views
+#pragma mark - viewDidLoad
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self configure];
+}
+
+
+#pragma mark - View Configuration
+-(void)configure
+{
     //[self configureBarHolderView];
     //[self configureNavigationBar];
     [self configureLocationManager];
-    [self loadMap];
+    [self configureMap];
+    [self configureContainerView];
     [self configureTableView];
     [self configureTextFields];
+    [self configureListButton];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidShow)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
     [self.dataAccess fillStationDataASynchronously];
-    self.navigationController.navigationBar.hidden = YES;
-
 }
 
+-(void) configureLocationManager
+{
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.delegate = self;
+    [self.locationManager startUpdatingLocation];
+}
+
+-(void)configureMap
+{
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:12]; // Chicago (zoomed out)
+    mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
+    mapView_.myLocationEnabled = YES;
+    [self.view insertSubview:mapView_ atIndex:0];
+}
+
+// to ensure it is at the bottom of stack use after mapView is drawn
+-(void)configureContainerView
+{
+    [self.view insertSubview:self.containerView belowSubview:mapView_];
+}
+
+-(void) configureTableView
+{
+    self.addressOptionsTableView.backgroundColor = [UIColor clearColor];
+}
+
+-(void)configureTextFields
+{
+    [self setLeftPaddingForTextField:self.startLocationField];
+    [self setLeftPaddingForTextField:self.endLocationField];
+}
+
+-(void)configureListButton
+{
+    UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    pan.delegate = self;
+    [self.listButton addGestureRecognizer:pan];
+}
+
+#pragma mark - Configuration Utilities
+
+-(void)setLeftPaddingForTextField:(UITextField *) textField
+{
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+    textField.leftView = paddingView;
+    textField.leftViewMode = UITextFieldViewModeAlways;
+}
+
+#pragma mark - Mapping
 #pragma mark - Geocoding functions
 
 // this method is used to display geocoding in real time as they enter values
@@ -108,7 +167,6 @@
                           }
                       }];
     
-
 }
 
 - (void)geocodeEndAddress
@@ -134,15 +192,11 @@
     polylineCount = 0;
     [mapView_ clear];
     BGLStationObject *pickupBikeStation = [self.dataAccess grabNearestStationTo:self.startLocation withOption:kNearestStationWithBike];
-    
     BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
     
     NSString * startLocationString = [[NSString alloc] initWithFormat:@"%f,%f", self.startLocation.coordinate.latitude, self.startLocation.coordinate.longitude];
-    
     NSString * pickupBikeStationString = [[NSString alloc] initWithFormat:@"%f,%f", pickupBikeStation.latitude, pickupBikeStation.longitude];
-    
     NSString * dropoffBikeStationString = [[NSString alloc] initWithFormat:@"%f,%f", dropoffBikeStation.latitude, dropoffBikeStation.longitude];
-    
     NSString * endLocationString = [[NSString alloc] initWithFormat:@"%f,%f", self.endLocation.coordinate.latitude, self.endLocation.coordinate.longitude];
     
     GoogleBikeRoute * routeFromStartLocationToPickUpBikeStation = [[GoogleBikeRoute alloc] initWithWaypoints:@[startLocationString, pickupBikeStationString] sensorStatus:YES andDelegate:self];
@@ -158,39 +212,10 @@
     [self addMarkerForStation:dropoffBikeStation];
     [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
     [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
-
     
 }
 
-#pragma mark - map drawing functions
-
-- (void) configureTextFields{
-    [self setLeftPaddingForTextField:self.startLocationField];
-    [self setLeftPaddingForTextField:self.endLocationField];
-}
-
--(void) setLeftPaddingForTextField: (UITextField *) textField{
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
-    textField.leftView = paddingView;
-    textField.leftViewMode = UITextFieldViewModeAlways;
-}
-
-
-- (void)loadMap
-{
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41.8739580629 longitude:-87.6277394859 zoom:12]; // Chicago (zoomed out)
-    mapView_ = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
-    mapView_.myLocationEnabled = YES;
-    [self.view insertSubview:mapView_ atIndex:0];
-}
-
--(void) configureLocationManager{
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    self.locationManager.delegate = self;
-    [self.locationManager startUpdatingLocation];
-}
-
+#pragma mark - Google Maps Utilities
 
 // Adds a Google Maps marker at a station
 - (void)addMarkerForStation:(BGLStationObject *)station
@@ -211,18 +236,17 @@
     marker.map = mapView_;
 }
 
-
-#pragma mark - GoogleBikeRouteDelegate functions
+#pragma mark - GoogleBikeRouteDelegate implementation
 
 -(void) routeWithPolyline: (GMSPolyline *) polyline{
     polyline.map = mapView_;
     if (++polylineCount == 3){
-        NSLog(@"cancel button should display");
         self.cancelButton.hidden = YES;
         self.listButton.hidden = NO;
     }
 }
 
+static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error finding part of your route, make sure you entered the address correctly and try again.";
 
 -(void) directionsFromServer: (NSDictionary *) directionsDictionary{
     NSArray * routesArray = directionsDictionary[@"routes"];
@@ -231,48 +255,47 @@
         NSDictionary * legsDictionary = routesDictionary[@"legs"][0];
         [self.directionsArray addObject:legsDictionary];
     } else {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Where?" message:@"There was an error finding part of your route, make sure you entered the address correctly and try again" delegate:self cancelButtonTitle:@"I'll try again." otherButtonTitles: nil];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Where?" message: kNoDirectionsReturnedAlertMessage delegate:self cancelButtonTitle:@"I'll try again." otherButtonTitles: nil];
         [alert show];
     }
 }
 
-#pragma mark - Storyboard Functions
+#pragma mark - CLLocationManagerDelegate implementation
 
--(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([self.directionsArray count] == 3) ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
+-(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    self.locationManager = manager;
 }
 
-#pragma mark - UITableView Configuration
-
--(void) configureTableView{
-    self.addressOptionsTableView.backgroundColor = [UIColor clearColor];
+-(void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    if (error.code == kCLErrorDenied) [manager stopUpdatingLocation];
 }
 
 
+
+
+#pragma mark - UITableViewController methods
 #pragma mark - UITableViewDelegate Functions
 
--(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
     UITextView * textView = (UITextView*)[cell viewWithTag:1];
     if (self.startLocationField.editing) self.startLocationField.text = textView.text;
     if (self.endLocationField.editing) self.endLocationField.text = textView.text;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
 }
 
 #pragma mark - UITableViewDataSourceDelegate Functions
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    // Return the number of rows in the section.
-    
+{    
     if ([self.displayedData count] < 5)
         return 5;
     else
@@ -284,16 +307,12 @@
     static NSString *CellIdentifier = @"enterLocationCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    UIImageView * backGroundView = [[UIImageView alloc] initWithFrame:cell.frame];
-    backGroundView.backgroundColor = [UIColor blackColor];
-    backGroundView.alpha = .6f;
-    cell.backgroundView = backGroundView;
+    cell.backgroundView = [self blackTransparentBackgroundWithFrame:cell.frame];
     if (indexPath.row < [self.displayedData count]){
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
-        UITextView * addressLabel = (UITextView*)[cell viewWithTag:1];
+        UITextView * addressLabel = [self enterLocationCellTextView:cell];
         addressLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO);
         cell.userInteractionEnabled = YES;
-        
     } else {
         cell.textLabel.text = @"";
         cell.userInteractionEnabled = NO;
@@ -302,45 +321,55 @@
     return cell;
 }
 
-#pragma mark - CLLocationManagerDelegate
+#pragma mark - UITableViewDataSourceDelegate Utilities
 
--(void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    self.locationManager = manager;
+-(UITextView *)enterLocationCellTextView:(UITableViewCell *)cell
+{
+    return (UITextView*)[cell viewWithTag:1];
 }
 
--(void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    if (error.code == kCLErrorDenied) [manager stopUpdatingLocation];
+-(UIImageView *)blackTransparentBackgroundWithFrame:(CGRect)frame
+{
+    UIImageView * backGroundView = [[UIImageView alloc] initWithFrame:frame];
+    backGroundView.backgroundColor = [UIColor blackColor];
+    backGroundView.alpha = .6f;
+    return backGroundView;
 }
 
-#pragma mark - actions
 
-- (IBAction)cancelPressed:(id)sender {
+#pragma mark - IBActions Implementaiton
+
+- (IBAction)cancelPressed:(id)sender
+{
     [self.view endEditing:YES];
     self.addressOptionsTableView.hidden = YES;
     [self resizeLocationFieldsByAmount:75.0 andSetCancelHidden:YES];
     movedTextFieldsLeft = NO;
 }
 
-- (IBAction)touchedButton:(id)sender {
+- (IBAction)touchedButton:(id)sender
+{
     self.cancelButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:0.5f];
 }
 
-#pragma mark - View Modifiers used in response to delegate actions
+#pragma mark - Textfields and Keyboard
+#pragma mark - UITextFieldDelegate Utilities
 
--(void) makeStartFieldCurrentLocation{
+-(void) makeStartFieldCurrentLocation
+{
     self.startLocationField.text = @"Current Location";
     self.startLocationField.textColor = [UIColor blueColor];
 }
 
--(CGRect) resizeRectWidthBy:(CGFloat) amount forView:(UIView *) view{
-    
+-(CGRect) resizeRectWidthBy:(CGFloat) amount forView:(UIView *) view
+{
     CGRect holderRect = view.frame;
     holderRect.size.width += amount;
-    
     return holderRect;
 }
 
--(void) resizeLocationFieldsByAmount: (CGFloat) amount andSetCancelHidden: (BOOL) hide{
+-(void) resizeLocationFieldsByAmount:(CGFloat) amount andSetCancelHidden:(BOOL) hide
+{
     [UIView animateWithDuration:0.1
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
@@ -355,42 +384,31 @@
 #pragma mark - UITextField Delegate
 
 // This area below needs to be cleaned up
--(void) textFieldDidBeginEditing:(UITextField *)textField{
-    
-    // this will make it so that the address string is immediately geocoded and a list of suggestions appear
+-(void) textFieldDidBeginEditing:(UITextField *)textField
+{
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
     if (!movedTextFieldsLeft){
         [self resizeLocationFieldsByAmount:-75.0 andSetCancelHidden:NO];
         movedTextFieldsLeft = YES;
     }
-
 }
 
-
--(void) keyboardDidShow{
-    // this is called from the notification center
-    self.addressOptionsTableView.hidden = NO;
-}
-
-
--(void) textFieldDidEndEditing:(UITextField *)textField{
-
-    if (textField.text.length == 0){
+-(void) textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField.text.length == 0) {
         if (textField.tag == 1) [self makeStartFieldCurrentLocation];
     }
-    
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     [self geocodeAddressStringToDisplay:textField.text];
     if (textField.tag == 1 && self.startLocationField.textColor != [UIColor blackColor]) self.startLocationField.textColor = [UIColor blackColor];
-    
     return YES;
 }
 
--(BOOL) textFieldShouldReturn:(UITextField *)textField{
-    
+-(BOOL) textFieldShouldReturn:(UITextField *)textField
+{
     if (self.startLocationField.text.length > 0 && self.endLocationField.text.length > 0){
         self.addressOptionsTableView.hidden = YES;
         [self.view endEditing:YES];
@@ -398,9 +416,29 @@
         self.endAddress = self.endLocationField.text;
         [self geocodeStartAddress];
     }
-    
     return YES;
 }
+
+#pragma mark - NSNotification Handling
+
+-(void) keyboardDidShow
+{
+    self.addressOptionsTableView.hidden = NO;
+}
+
+#pragma mark - Transitions
+#pragma mark - UIGestureRecognizerDelegate
+
+-(void) handlePan: (UIPanGestureRecognizer *) recognizer
+{
+    
+}
+#pragma mark - StoryboardSegue
+
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([self.directionsArray count] == 3) ((DivvyDirectionViewController *) segue.destinationViewController).directions = self.directionsArray;
+}
+#pragma mark - Additional Necessities
 
 
 #pragma mark - Lazy Instantiations
