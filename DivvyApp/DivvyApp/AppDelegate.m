@@ -14,6 +14,8 @@
 {
     // Override point for customization after application launch.
     [GMSServices provideAPIKey:@"AIzaSyBJO3RmvAssswvbv8GQJYSr3caWlgMExtA"];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent
+                                                animated:YES];
     return YES;
 }
 							

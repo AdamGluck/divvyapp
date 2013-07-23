@@ -37,7 +37,6 @@
 		8DF87C35178754FF00A77764 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF87C34178754FF00A77764 /* QuartzCore.framework */; };
 		8DF87C371787550500A77764 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF87C361787550500A77764 /* SystemConfiguration.framework */; };
 		8DF87C3B178A567500A77764 /* divvy_logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8DF87C3A178A567500A77764 /* divvy_logo.jpg */; };
-		8DF87C3E178A570700A77764 /* DivvyHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF87C3D178A570700A77764 /* DivvyHomeViewController.m */; };
 		8DF87C41178A572C00A77764 /* DivvyMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF87C40178A572C00A77764 /* DivvyMapViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -81,8 +80,6 @@
 		8DF87C34178754FF00A77764 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8DF87C361787550500A77764 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		8DF87C3A178A567500A77764 /* divvy_logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = divvy_logo.jpg; path = ../divvy_logo.jpg; sourceTree = "<group>"; };
-		8DF87C3C178A570600A77764 /* DivvyHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DivvyHomeViewController.h; sourceTree = "<group>"; };
-		8DF87C3D178A570700A77764 /* DivvyHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DivvyHomeViewController.m; sourceTree = "<group>"; };
 		8DF87C3F178A572C00A77764 /* DivvyMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DivvyMapViewController.h; sourceTree = "<group>"; };
 		8DF87C40178A572C00A77764 /* DivvyMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DivvyMapViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,23 +183,6 @@
 			name = "Station Objects";
 			sourceTree = "<group>";
 		};
-		0F495E53179DCD9E005D6F39 /* Old */ = {
-			isa = PBXGroup;
-			children = (
-				0F495E54179DCDAC005D6F39 /* HomeViewController */,
-			);
-			name = Old;
-			sourceTree = "<group>";
-		};
-		0F495E54179DCDAC005D6F39 /* HomeViewController */ = {
-			isa = PBXGroup;
-			children = (
-				8DF87C3C178A570600A77764 /* DivvyHomeViewController.h */,
-				8DF87C3D178A570700A77764 /* DivvyHomeViewController.m */,
-			);
-			name = HomeViewController;
-			sourceTree = "<group>";
-		};
 		0F495E55179DCDCD005D6F39 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,7 +260,6 @@
 				0F495E4A179DCCC3005D6F39 /* API */,
 				0F495E51179DCD65005D6F39 /* Custom NSObjects */,
 				0F495E57179E0C0D005D6F39 /* AppDelegate */,
-				0F495E53179DCD9E005D6F39 /* Old */,
 				0F4CF4A21783A67600889B08 /* Supporting Files */,
 			);
 			path = DivvyApp;
@@ -373,7 +352,6 @@
 				0F4CF4AC1783A67600889B08 /* AppDelegate.m in Sources */,
 				0F4CF4C01783A7DB00889B08 /* BGLDivvyDataAccess.m in Sources */,
 				0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */,
-				8DF87C3E178A570700A77764 /* DivvyHomeViewController.m in Sources */,
 				8DF87C41178A572C00A77764 /* DivvyMapViewController.m in Sources */,
 				0F9B7834178A631700CAC533 /* GoogleBikeRoute.m in Sources */,
 				0F9B7837178B2D0700CAC533 /* DivvyDirectionViewController.m in Sources */,

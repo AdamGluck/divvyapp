@@ -11,48 +11,39 @@
 @interface DivvyDirectionViewController () <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) NSMutableArray * stepsArray;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
 @implementation DivvyDirectionViewController
 
-#pragma mark - boiler plate
-
+#pragma mark - Boilerplate
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self addSwipegestureRecognizer];
-}
-
--(void) addSwipegestureRecognizer{
-    UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRecognized:)];
-    swipe.delegate = self;
-    [self.view addGestureRecognizer:swipe];
-}
-
--(void) swipeRecognized: (UISwipeGestureRecognizer *) swipe{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
+#pragma mark - UITableView handling
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"number of rows in section");
-    // Return the number of rows in the section.
-    return 1;// [self.stepsArray[section] count];
+    if (self.directions.count){
+        [self fillStepsArray];
+        return [self.stepsArray[section] count];
+    } else {
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -73,7 +64,8 @@
     return cell;
 }
 
--(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+-(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
     if (section == 0){
         return @"First Walking Route";
     } else if (section == 1){
@@ -83,9 +75,7 @@
     }
 }
 
-#pragma mark - Table view delegate
-
-#pragma mark - Utility Functions
+#pragma mark - UITableView Utilities
 
 -(NSString *) stringByStrippingHTML: (NSString *) string {
     NSRange r;
@@ -94,23 +84,34 @@
     return string;
 }
 
-#pragma mark - lazy instantiation
+-(void)loadTableViewData{
+    [self.tableView reloadData];
+}
 
--(NSMutableArray *) stepsArray{
+#pragma mark - Property Handling
+#pragma mark - Property Utilities 
+
+-(void) fillStepsArray{
+    for (int i = 0; i < 3; i ++){
+        [self.stepsArray addObject:self.directions[i][@"steps"]];
+    }
+}
+
+#pragma mark - Lazy Instantiations
+
+-(NSMutableArray *) stepsArray
+{
     if (!_stepsArray){
         _stepsArray = [[NSMutableArray alloc] init];
-        for (int i = 0; i < 3; i ++){
-            [_stepsArray addObject:self.directions[i][@"steps"]];
-        }
+
     }
-    
     return _stepsArray;
 }
--(NSArray *) directions{
+-(NSArray *) directions
+{
     if (!_directions){
         _directions = [[NSArray alloc] init];
     }
-    
     return _directions;
 }
 

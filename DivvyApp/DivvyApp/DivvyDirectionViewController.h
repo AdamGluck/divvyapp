@@ -11,5 +11,6 @@
 @interface DivvyDirectionViewController : UIViewController
 
 @property (strong, nonatomic) NSArray * directions;
+-(void) loadTableViewData;
 
 @end
