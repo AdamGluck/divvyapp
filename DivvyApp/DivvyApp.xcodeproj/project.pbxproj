@@ -22,9 +22,10 @@
 		0F9B7837178B2D0700CAC533 /* DivvyDirectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7836178B2D0700CAC533 /* DivvyDirectionViewController.m */; };
 		0FB6987F1783C990000E5241 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FB6987E1783C990000E5241 /* CoreLocation.framework */; };
 		0FD7A25217950CE500D47BBC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FD7A25117950CE500D47BBC /* AddressBookUI.framework */; };
-		8D287A5C1795F9FE004E180A /* LocationArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D287A5B1795F9FE004E180A /* LocationArrow.png */; };
-		8D287A5E1795FD7E004E180A /* 74-location.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D287A5D1795FD7E004E180A /* 74-location.png */; };
 		8D679550179EF3DB00AEAE51 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D67954E179EF3DB00AEAE51 /* MainStoryboard.storyboard */; };
+		8D679553179EF99B00AEAE51 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D679551179EF99B00AEAE51 /* MainStoryboard.storyboard */; };
+		8D679555179EFA3200AEAE51 /* 74-location.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D679554179EFA3200AEAE51 /* 74-location.png */; };
+		8D679557179EFBAB00AEAE51 /* LocationArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D679556179EFBAB00AEAE51 /* LocationArrow.png */; };
 		8DE20514178B7F3700CA78A0 /* divvy_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE20513178B7F3700CA78A0 /* divvy_logo.png */; };
 		8DE20516178B7F8B00CA78A0 /* divvy_logo_retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE20515178B7F8B00CA78A0 /* divvy_logo_retina.png */; };
 		8DF87C1F1787541400A77764 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF87C1E1787541400A77764 /* GoogleMaps.framework */; };
@@ -69,9 +70,10 @@
 		0FB6987C1783C96E000E5241 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0FB6987E1783C990000E5241 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0FD7A25117950CE500D47BBC /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		8D287A5B1795F9FE004E180A /* LocationArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LocationArrow.png; sourceTree = "<group>"; };
-		8D287A5D1795FD7E004E180A /* 74-location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "74-location.png"; path = "../../../../glyphish-icons/PNG icons/74-location.png"; sourceTree = "<group>"; };
 		8D67954F179EF3DB00AEAE51 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		8D679552179EF99B00AEAE51 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = DivvyApp/en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		8D679554179EFA3200AEAE51 /* 74-location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "74-location.png"; sourceTree = "<group>"; };
+		8D679556179EFBAB00AEAE51 /* LocationArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LocationArrow.png; sourceTree = "<group>"; };
 		8DE20513178B7F3700CA78A0 /* divvy_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divvy_logo.png; sourceTree = "<group>"; };
 		8DE20515178B7F8B00CA78A0 /* divvy_logo_retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divvy_logo_retina.png; sourceTree = "<group>"; };
 		8DF87C1E1787541400A77764 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
@@ -203,7 +205,7 @@
 		0F495E56179DCDD4005D6F39 /* Storyboard */ = {
 			isa = PBXGroup;
 			children = (
-				0F4CF4B31783A67600889B08 /* MainStoryboard.storyboard */,
+				8D679551179EF99B00AEAE51 /* MainStoryboard.storyboard */,
 			);
 			name = Storyboard;
 			sourceTree = "<group>";
@@ -265,21 +267,11 @@
 		0F4CF4A11783A67600889B08 /* DivvyApp */ = {
 			isa = PBXGroup;
 			children = (
-				0F9B7832178A631700CAC533 /* GoogleBikeRoute.h */,
-				0F9B7833178A631700CAC533 /* GoogleBikeRoute.m */,
-				0F4CF4AA1783A67600889B08 /* AppDelegate.h */,
-				0F4CF4AB1783A67600889B08 /* AppDelegate.m */,
-				0F9B7835178B2D0700CAC533 /* DivvyDirectionViewController.h */,
-				8D67954E179EF3DB00AEAE51 /* MainStoryboard.storyboard */,
-				0F9B7836178B2D0700CAC533 /* DivvyDirectionViewController.m */,
-				8DF87C3F178A572C00A77764 /* DivvyMapViewController.h */,
-				8DF87C40178A572C00A77764 /* DivvyMapViewController.m */,
-				8D287A5D1795FD7E004E180A /* 74-location.png */,
-				8D287A5B1795F9FE004E180A /* LocationArrow.png */,
-				0F4CF4BE1783A7DB00889B08 /* BGLDivvyDataAccess.h */,
-				0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */,
-				0F9B782F178A3B3700CAC533 /* BGLStationObject.h */,
-				0F9B7830178A3B3700CAC533 /* BGLStationObject.m */,
+				0F495E55179DCDCD005D6F39 /* Views */,
+				0F495E4E179DCCFA005D6F39 /* View Controllers */,
+				0F495E4A179DCCC3005D6F39 /* API */,
+				0F495E51179DCD65005D6F39 /* Custom NSObjects */,
+				0F495E57179E0C0D005D6F39 /* AppDelegate */,
 				0F4CF4A21783A67600889B08 /* Supporting Files */,
 			);
 			path = DivvyApp;
@@ -288,6 +280,8 @@
 		0F4CF4A21783A67600889B08 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8D679556179EFBAB00AEAE51 /* LocationArrow.png */,
+				8D679554179EFA3200AEAE51 /* 74-location.png */,
 				8DF87C3A178A567500A77764 /* divvy_logo.jpg */,
 				0F4CF4A31783A67600889B08 /* DivvyApp-Info.plist */,
 				0F4CF4A41783A67600889B08 /* InfoPlist.strings */,
@@ -359,9 +353,10 @@
 				8DF87C3B178A567500A77764 /* divvy_logo.jpg in Resources */,
 				8DE20514178B7F3700CA78A0 /* divvy_logo.png in Resources */,
 				8DE20516178B7F8B00CA78A0 /* divvy_logo_retina.png in Resources */,
-				8D287A5C1795F9FE004E180A /* LocationArrow.png in Resources */,
-				8D287A5E1795FD7E004E180A /* 74-location.png in Resources */,
 				8D679550179EF3DB00AEAE51 /* MainStoryboard.storyboard in Resources */,
+				8D679553179EF99B00AEAE51 /* MainStoryboard.storyboard in Resources */,
+				8D679555179EFA3200AEAE51 /* 74-location.png in Resources */,
+				8D679557179EFBAB00AEAE51 /* LocationArrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +395,14 @@
 			);
 			name = MainStoryboard.storyboard;
 			path = DivvyApp;
+			sourceTree = "<group>";
+		};
+		8D679551179EF99B00AEAE51 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8D679552179EF99B00AEAE51 /* en */,
+			);
+			name = MainStoryboard.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

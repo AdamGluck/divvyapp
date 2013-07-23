@@ -107,6 +107,9 @@
     [self.view insertSubview:mapView_ atIndex:0];
 }
 
+
+
+
 // to ensure it is at the bottom of stack use after mapView is drawn
 -(void)configureContainerView
 {
@@ -154,6 +157,33 @@
 //    
 //    locationTapGestureRec.delegate = self;
 }
+
+//-(void) configureLocationManager
+//{
+//    self.locationManager = [[CLLocationManager alloc] init];
+//    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+//    self.locationManager.delegate = self;
+//    [self.locationManager startUpdatingLocation];
+//}
+//
+//
+//
+//// to ensure it is at the bottom of stack use after mapView is drawn
+//-(void)configureContainerView
+//{
+//    [self.view insertSubview:self.containerView belowSubview:mapView_];
+//}
+//
+//-(void) configureTableView
+//{
+//    self.addressOptionsTableView.backgroundColor = [UIColor clearColor];
+//}
+//
+//-(void)configureTextFields
+//{
+//    [self setLeftPaddingForTextField:self.startLocationField];
+//    [self setLeftPaddingForTextField:self.endLocationField];
+//}
 
 -(void)configureListButton
 {
@@ -340,7 +370,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+{    
     if ([self.displayedData count] < 5)
         return 5;
     else
