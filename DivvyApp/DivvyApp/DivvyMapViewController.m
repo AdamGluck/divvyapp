@@ -660,6 +660,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     if (!_dataAccess){
         _dataAccess = [[BGLDivvyDataAccess alloc] init];
         _dataAccess.delegate = self;
+        _dataAccess.autoRefresh = YES;
     }
     return _dataAccess;
 }
