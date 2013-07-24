@@ -28,21 +28,19 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 
 #pragma mark - Lazy Instantiation
 
--(NSURL *) directionsURL{
-    
+-(NSURL *) directionsURL
+{
     if (!_directionsURL){
         _directionsURL = [[NSURL alloc] init];
     }
-    
     return _directionsURL;
 }
 
--(NSArray *) waypoints{
-    
+-(NSArray *) waypoints
+{
     if (!_waypoints){
         _waypoints = [[NSArray alloc] init];
     }
-    
     return _waypoints;
 }
 
@@ -50,8 +48,8 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 #pragma mark - core methods
 
 
-- (NSString *) modeForType: (GoogleRouteTransportationType) type {
-    
+- (NSString *) modeForType: (GoogleRouteTransportationType) type
+{
     if (type == kTransportationTypePublicTransit)
         return @"transit";
     else if (type == kTransportationTypeWalking)
@@ -81,11 +79,11 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
     url = [[url
            stringByAddingPercentEscapesUsingEncoding: NSASCIIStringEncoding] mutableCopy];
     self.directionsURL = [NSURL URLWithString:url];
-    NSLog(@"URL = %@", self.directionsURL);
     [self retrieveDirections];
 }
 
 - (void)retrieveDirections{
+    if ([self.delegate respondsToSelector:@selector(startingServerRequest)]) [self.delegate startingServerRequest];
     dispatch_async(dispatch_get_main_queue(), ^{
         NSData* data =
         [NSData dataWithContentsOfURL:self.directionsURL];

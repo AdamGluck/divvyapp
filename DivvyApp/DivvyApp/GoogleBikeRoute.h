@@ -14,6 +14,7 @@
 @optional
 -(void) routeWithPolyline: (GMSPolyline *) polyline;
 -(void) directionsFromServer: (NSDictionary *) directionsDictionary;
+-(void) startingServerRequest;
 
 @end
 

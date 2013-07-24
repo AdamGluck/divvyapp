@@ -64,7 +64,6 @@
 
 -(void) setAutoRefresh: (BOOL) theBool{
     
-    
     if (self.autoRefresh != theBool){
         
         _autoRefresh = theBool;

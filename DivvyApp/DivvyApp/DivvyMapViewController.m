@@ -23,6 +23,8 @@
     CGPoint originalMapViewCenter;
     CGPoint originalListToggleCenter;
     CGPoint originalPanTouchMapViewCenter;
+    CGPoint originalShowAndClearButtonCenter;
+    BOOL shouldClearPinsOnButtonPress;
 }
 
 // grabbing global location data properties
@@ -39,20 +41,23 @@
 @property (strong, nonatomic) CLLocation *endLocation;
 @property (strong, nonatomic) IBOutlet UITextField *startLocationField;
 @property (strong, nonatomic) IBOutlet UITextField *endLocationField;
+@property (strong, nonatomic) BGLStationObject * startStation;
+@property (strong, nonatomic) BGLStationObject * endStation;
 
 // properties that are used to store and display data about directions
 @property (strong, nonatomic) NSArray * displayedData; // this holds suggested directions to display in the enterInstructionsView
 @property (strong,nonatomic) NSMutableArray * directionsArray; // this holds the direction data returned from google maps to be displayed in the UITableView on the next screen
 @property (strong, nonatomic) IBOutlet UITableView *addressOptionsTableView;
 
-// barbuttonitems
-
+// buttons
 @property (strong, nonatomic) IBOutlet UIView *listToggle;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
+@property (strong, nonatomic) IBOutlet UIButton *showAndClearButton;
 
 // views
 @property (strong, nonatomic) IBOutlet UIView *barHolderView;
 @property (strong, nonatomic) IBOutlet UIView *containerView;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 
 @end
@@ -126,7 +131,6 @@
     [self setLeftPaddingForTextField:self.endLocationField];
 }
 
-
 -(void)configureListButton
 {
     UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
@@ -139,6 +143,7 @@
     originalListToggleCenter = self.listToggle.center;
     originalMapViewCenter = mapView_.center;
     originalTextFieldViewCenter = self.barHolderView.center;
+    originalShowAndClearButtonCenter = self.showAndClearButton.center;
 }
 
 #pragma mark - Configuration Utilities
@@ -150,30 +155,8 @@
 }
 
 #pragma mark - --Mapping--
-#pragma mark - Geocoding functions
-// this method is used to display geocoding in real time as they enter values
--(void) geocodeAddressStringToDisplay: (NSString *) addressString
-{
-    // Suggests
-    [self.geocoder geocodeAddressString:addressString inRegion:self.chicagoRegion completionHandler:^(NSArray *placemarks, NSError *error){
-        
-        // Filter placemarks because the above method doesn't automatically do that :(
-        NSMutableArray *filteredPlacemarks = [[NSMutableArray alloc] init];
-        for (CLPlacemark *placemark in placemarks)
-        {
-            if ([self.chicagoRegion containsCoordinate:placemark.location.coordinate])
-            {
-                [filteredPlacemarks addObject:placemark];
-            }
-        }
-        self.displayedData = [filteredPlacemarks copy];
-        
-        [self.addressOptionsTableView reloadData];
-        if (error) {
-            NSLog(@"Error in geocoder: %@", error);
-        }
-    }];
-}
+#pragma mark - Geocoding and routing sequence
+
 
 /* read these three functions from top to bottom, start address leads to end address, which then draws the stations */
 - (void)geocodeStartAddress
@@ -207,16 +190,15 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
                               UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Try again" message: kServerErrorMessage delegate:self cancelButtonTitle:@"Will do!" otherButtonTitles: nil];
                               [alert show];
                           } else {
-                              [self findStations];
+                              [self clearMapFindStationsAndRedrawMarkers];
                           }
                       }];
 }
 
-- (void)findStations
+- (void)clearMapFindStationsAndRedrawMarkers //AndHandleRouteDrawingInDelegate
 {
-    polylineCount = 0;
-    [mapView_ clear];
-    [self.directionsArray removeAllObjects];
+    [self clearMapAndRelatedData];
+    [self setButtonToShow];
     BGLStationObject *pickupBikeStation = [self.dataAccess grabNearestStationTo:self.startLocation withOption:kNearestStationWithBike];
     BGLStationObject *dropoffBikeStation = [self.dataAccess grabNearestStationTo:self.endLocation withOption:kNearestStationOpen];
     
@@ -234,6 +216,9 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
     GoogleBikeRoute * routeFromDropOffToEndDestination = [[GoogleBikeRoute alloc] initWithWaypoints:@[dropoffBikeStationString, endLocationString] sensorStatus:YES andDelegate:self];
     [routeFromDropOffToEndDestination goWithTransportationType:kTransportationTypeWalking];
     
+    self.startStation = pickupBikeStation;
+    self.endStation = dropoffBikeStation;
+    
     [self addMarkerForStation:pickupBikeStation];
     [self addMarkerForStation:dropoffBikeStation];
     [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
@@ -242,6 +227,39 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
 }
 
 #pragma mark - Google Maps Utilities
+
+-(void) clearMapAndRelatedData
+{
+    polylineCount = 0;
+    [mapView_ clear];
+    [self.directionsArray removeAllObjects];
+}
+
+// This method is used to display geocoding in real time as they enter values
+-(void) geocodeAddressStringToDisplay: (NSString *) addressString
+{
+    // Suggests
+    self.displayedData = [[NSArray alloc] init]; // create new array
+    [self.geocoder geocodeAddressString:addressString inRegion:self.chicagoRegion completionHandler:^(NSArray *placemarks, NSError *error){
+        
+        // Filter placemarks because the above method doesn't automatically do that :(
+        NSMutableArray *filteredPlacemarks = [[NSMutableArray alloc] init];
+        for (CLPlacemark *placemark in placemarks)
+        {
+            if ([self.chicagoRegion containsCoordinate:placemark.location.coordinate])
+            {
+                [filteredPlacemarks addObject:placemark];
+            }
+        }
+        self.displayedData = [filteredPlacemarks copy];
+        
+        [self.addressOptionsTableView reloadData];
+        if (error) {
+            NSLog(@"Error in geocoder: %@", error);
+        }
+    }];
+}
+
 // Adds a Google Maps marker at a station
 - (void)addMarkerForStation:(BGLStationObject *)station
 {
@@ -273,12 +291,37 @@ static NSString * kServerErrorMessage = @"Couldn't get directions from server, m
     marker.map = mapView_;
 }
 
+-(void) showAllDivvyStations
+{
+    for (BGLStationObject * station in self.dataAccess.stationList)
+        [self addMarkerForStation:station];
+}
+
+-(void) clearAllDivvyStationsNotRouted
+{
+    for (GMSMarker * station in mapView_.markers) station.map = nil;
+    if (self.startStation && self.endStation && self.startLocation && self.endLocation){
+        [self addMarkerForStation:self.startStation];
+        [self addMarkerForStation:self.endStation];
+        [self addMarkerAtLocation:self.startLocation withTitle:@"Start"];
+        [self addMarkerAtLocation:self.endLocation withTitle:@"End"];
+    }
+}
+
 #pragma mark - GoogleBikeRouteDelegate implementation
+
+-(void) startingServerRequest
+{
+    self.activityIndicator.hidden = NO;
+    [self.activityIndicator startAnimating];
+}
+
 -(void) routeWithPolyline: (GMSPolyline *) polyline
 {
     polyline.map = mapView_;
     if (++polylineCount == 3){
         self.listToggle.hidden = NO;
+        [self.activityIndicator stopAnimating];
     }
 }
 
@@ -338,10 +381,13 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     static NSString *CellIdentifier = @"enterLocationCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
+    cell.userInteractionEnabled = YES;
+    UITextView * addressLabel = [self enterLocationCellTextView:cell];
+    addressLabel.text = @"";
     cell.backgroundView = [self blackTransparentBackgroundWithFrame:cell.frame];
+    
     if (indexPath.row < [self.displayedData count]){
         CLPlacemark * placemark = (CLPlacemark *)self.displayedData[indexPath.row];
-        UITextView * addressLabel = [self enterLocationCellTextView:cell];
         addressLabel.text = NSLocalizedString(ABCreateStringWithAddressDictionary(placemark.addressDictionary, NO), nil);
         cell.userInteractionEnabled = YES;
     } else {
@@ -383,6 +429,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 
 -(void) resizeLocationFieldsByAmount:(CGFloat) amount andSetCancelHidden:(BOOL) hide
 {
+    /* the if statements make sure it becomes hidden at the right time, before or after the animation */
     if (hide) self.cancelButton.hidden = hide;
     [UIView animateWithDuration:0.1
                           delay:0.0
@@ -397,7 +444,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 
 -(void)moveFieldsLeft
 {
-    [self resizeLocationFieldsByAmount:75.0 andSetCancelHidden:NO];
+    [self resizeLocationFieldsByAmount:-75.0 andSetCancelHidden:NO];
     movedTextFieldsLeft = YES;
 }
 
@@ -411,16 +458,14 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 -(void) textFieldDidBeginEditing:(UITextField *)textField
 {
     if (textField.text.length > 0) [self geocodeAddressStringToDisplay:textField.text];
-    if (!movedTextFieldsLeft){
-        [self resizeLocationFieldsByAmount:-75.0 andSetCancelHidden:NO];
-        movedTextFieldsLeft = YES;
-    }
+    if (!movedTextFieldsLeft) [self moveFieldsLeft];
+    
 }
 
 -(void) textFieldDidEndEditing:(UITextField *)textField
 {
-    if (textField.text.length == 0) {
-        if (textField.tag == 1) [self makeStartFieldCurrentLocation];
+    if ((textField.text.length == 0 || [textField.text.lowercaseString isEqualToString:@"current location"]) && textField.tag == 1) {
+        [self makeStartFieldCurrentLocation];
     }
 }
 
@@ -452,6 +497,17 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 
 #pragma mark - StoryBoard Button IBActions Handling
 
+- (IBAction)showPressed:(id)sender
+{
+    if (!shouldClearPinsOnButtonPress){
+        [self showAllDivvyStations];
+        [self setButtonToClear];
+    } else if (shouldClearPinsOnButtonPress){
+        [self clearAllDivvyStationsNotRouted];
+        [self setButtonToShow];
+    }
+}
+
 - (IBAction)cancelPressed:(id)sender
 {
     [self.view endEditing:YES];
@@ -460,9 +516,19 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     movedTextFieldsLeft = NO;
 }
 
-- (IBAction)touchedButton:(id)sender
+
+#pragma mark - IBAction Utilities
+
+-(void) setButtonToClear
 {
-    self.cancelButton.backgroundColor = [UIColor colorWithRed:47.0/255.0 green:202.0/255.0 blue:252.0/255.0 alpha:0.5f];
+    shouldClearPinsOnButtonPress = YES;
+    [self.showAndClearButton setTitle:@"Clear" forState:UIControlStateNormal];
+}
+
+-(void) setButtonToShow
+{
+    shouldClearPinsOnButtonPress = NO;
+    [self.showAndClearButton setTitle:@"Show" forState:UIControlStateNormal];
 }
 
 #pragma mark - --Transitions--
@@ -512,6 +578,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     mapView_.center = originalMapViewCenter;
     self.listToggle.center = originalListToggleCenter;
     self.barHolderView.center = originalTextFieldViewCenter;
+    self.showAndClearButton.center = originalShowAndClearButtonCenter;
 }
 
 -(void)moveCoverViewOffScreen
@@ -519,6 +586,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     mapView_.center = CGPointMake(originalMapViewCenter.x - 320, originalMapViewCenter.y);
     self.barHolderView.center = CGPointMake(originalTextFieldViewCenter.x - 320, originalTextFieldViewCenter.y);
     self.listToggle.center = CGPointMake(originalListToggleCenter.x - 302, originalListToggleCenter.y);
+    self.showAndClearButton.center = CGPointMake(originalShowAndClearButtonCenter.x - 320, originalShowAndClearButtonCenter.y - 320);
 }
 
 -(void)moveViewByTranslationDerivedFromTouch:(CGPoint) point
