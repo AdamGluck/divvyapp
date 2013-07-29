@@ -11,6 +11,4 @@
 @interface DivvyMapViewController : UIViewController
 
 
-
-
 @end

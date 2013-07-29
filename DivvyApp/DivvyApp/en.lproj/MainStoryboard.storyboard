@@ -87,9 +87,6 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <connections>
-                                            <action selector="touchedButton:" destination="ER4-lV-ApI" eventType="touchDown" id="2hO-Di-idP"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.23921568627450979" green="0.71764705882352942" blue="0.89411764705882346" alpha="1" colorSpace="calibratedRGB"/>
@@ -179,11 +176,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Route Planner" id="zFQ-zk-42S">
                         <barButtonItem key="leftBarButtonItem" title="List" id="V2J-Nx-wvT"/>
-                        <barButtonItem key="rightBarButtonItem" title="Go" style="done" id="9rS-GQ-RHS">
-                            <connections>
-                                <action selector="startGoing:" destination="ER4-lV-ApI" id="3Yv-Ty-NPC"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Go" style="done" id="9rS-GQ-RHS"/>
                     </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <nil key="simulatedTopBarMetrics"/>

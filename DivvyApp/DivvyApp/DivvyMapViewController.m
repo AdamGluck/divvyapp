@@ -399,8 +399,9 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
 }
 
 #pragma mark - UITableViewDataSourceDelegate Utilities
--(UITextView *)enterLocationCellTextView:(UITableViewCell *)cell
+-(UITextView *)enterLocationCellTextView:(UITableViewCell *)cell 
 {
+    
     return (UITextView*)[cell viewWithTag:1];
 }
 
