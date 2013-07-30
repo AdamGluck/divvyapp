@@ -67,21 +67,41 @@
     return cell;
 }
 
--(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView * headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 35.0)];
+    headerView.backgroundColor = [UIColor colorWithRed:61.0/255.0 green:183.0/255.0 blue:228.0/255.0 alpha:1.0f];
+    UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, headerView.bounds.size.width, 25)];
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [UIColor whiteColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = [self titleForHeaderInSection:section];
+    label.font = [UIFont boldSystemFontOfSize:14.0];
+    [headerView addSubview:label];
+    
+    return headerView;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 35.0;
+}
+#pragma mark - UITableView Utilities
+
+-(NSString *) titleForHeaderInSection:(NSInteger)section
 {
     NSString * titleString;
     if (section == 0){
-        titleString = @"Walking route";
+        titleString = @"Walking Route";
     } else if (section == 1){
         titleString = @"Biking Route";
     } else {
-        titleString = @"Walking route";
+        titleString = @"Walking Route";
     }
     
     return NSLocalizedString(titleString, nil);
 }
-
-#pragma mark - UITableView Utilities
 
 -(NSString *) stringByStrippingHTML: (NSString *) string
 {

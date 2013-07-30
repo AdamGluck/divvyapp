@@ -113,7 +113,6 @@
     [self.view insertSubview:mapView_ atIndex:0];
 }
 
-
 // to ensure it is at the bottom of stack use after mapView is drawn
 -(void)configureContainerView
 {

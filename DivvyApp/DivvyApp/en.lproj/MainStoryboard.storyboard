@@ -87,6 +87,9 @@
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="cancelPressed:" destination="ER4-lV-ApI" eventType="touchUpInside" id="f3h-RF-tB4"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.23921568627450979" green="0.71764705882352942" blue="0.89411764705882346" alpha="1" colorSpace="calibratedRGB"/>
@@ -211,35 +214,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="566"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="SGv-UH-kBo">
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="83" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="SGv-UH-kBo">
+                                <color key="backgroundColor" red="0.11372549019607843" green="0.62745098039215685" blue="0.81960784313725488" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="551" id="RkT-i3-49w"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="77" id="pjq-KA-aHT">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="77"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="85" id="pjq-KA-aHT">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="85"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="84"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Svr-ol-Ruh">
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Svr-ol-Ruh">
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="L2V-VO-83Y"/>
+                                                        <constraint firstAttribute="height" constant="48" id="7Ft-32-0ZA"/>
                                                         <constraint firstAttribute="width" constant="280" id="svH-gz-Lsu"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OM1-Hb-jZr">
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OM1-Hb-jZr">
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="160" id="3dn-hd-PHV"/>
-                                                        <constraint firstAttribute="height" constant="21" id="g9Y-f6-A6f"/>
+                                                        <constraint firstAttribute="height" constant="24" id="wTs-Pj-75W"/>
                                                     </constraints>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
@@ -247,10 +249,10 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="Svr-ol-Ruh" firstAttribute="leading" secondItem="pjq-KA-aHT" secondAttribute="leading" constant="19" id="8OP-TX-eMn"/>
-                                            <constraint firstAttribute="bottom" secondItem="OM1-Hb-jZr" secondAttribute="bottom" constant="8" id="F6y-J5-om4"/>
+                                            <constraint firstItem="Svr-ol-Ruh" firstAttribute="leading" secondItem="pjq-KA-aHT" secondAttribute="leading" constant="19" id="8m1-k8-CtR"/>
                                             <constraint firstItem="OM1-Hb-jZr" firstAttribute="leading" secondItem="Svr-ol-Ruh" secondAttribute="leading" type="default" id="Gyd-pT-6VM"/>
-                                            <constraint firstItem="Svr-ol-Ruh" firstAttribute="top" secondItem="pjq-KA-aHT" secondAttribute="top" constant="3" id="uNt-9X-Z7E"/>
+                                            <constraint firstAttribute="bottom" secondItem="OM1-Hb-jZr" secondAttribute="bottom" constant="12" id="Qpm-kH-swo"/>
+                                            <constraint firstItem="Svr-ol-Ruh" firstAttribute="top" secondItem="pjq-KA-aHT" secondAttribute="top" constant="3" id="Rbl-5L-CMm"/>
                                         </constraints>
                                     </tableViewCell>
                                 </prototypes>
@@ -262,8 +264,8 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="SGv-UH-kBo" firstAttribute="top" secondItem="e9P-h5-C0D" secondAttribute="top" constant="7" id="Izl-W4-fR4"/>
                             <constraint firstItem="SGv-UH-kBo" firstAttribute="trailing" secondItem="e9P-h5-C0D" secondAttribute="trailing" type="default" id="JSt-ij-YP2"/>
-                            <constraint firstItem="SGv-UH-kBo" firstAttribute="top" secondItem="e9P-h5-C0D" secondAttribute="top" constant="10" id="ahE-3H-2Ja"/>
                             <constraint firstItem="SGv-UH-kBo" firstAttribute="leading" secondItem="e9P-h5-C0D" secondAttribute="leading" type="default" id="gtb-lw-6Xl"/>
                         </constraints>
                     </view>
@@ -287,8 +289,6 @@
         <class className="DivvyMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DivvyMapViewController.h"/>
             <relationships>
-                <relationship kind="action" name="cancelPressed:"/>
-                <relationship kind="action" name="showPressed:"/>
                 <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="addressOptionsTableView" candidateClass="UITableView"/>
                 <relationship kind="outlet" name="barHolderView" candidateClass="UIView"/>
