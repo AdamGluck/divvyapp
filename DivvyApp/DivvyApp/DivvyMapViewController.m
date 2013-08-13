@@ -586,7 +586,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     mapView_.center = CGPointMake(originalMapViewCenter.x - 320, originalMapViewCenter.y);
     self.barHolderView.center = CGPointMake(originalTextFieldViewCenter.x - 320, originalTextFieldViewCenter.y);
     self.listToggle.center = CGPointMake(originalListToggleCenter.x - 302, originalListToggleCenter.y);
-    self.showAndClearButton.center = CGPointMake(originalShowAndClearButtonCenter.x - 320, originalShowAndClearButtonCenter.y - 320);
+    self.showAndClearButton.center = CGPointMake(originalShowAndClearButtonCenter.x - 320, originalShowAndClearButtonCenter.y);
 }
 
 -(void)moveViewByTranslationDerivedFromTouch:(CGPoint) point
@@ -595,6 +595,7 @@ static NSString * kNoDirectionsReturnedAlertMessage = @"There was an error findi
     mapView_.center = [self newCenterFromOriginalCenter:originalMapViewCenter andTranslation:translation];
     self.listToggle.center = [self newCenterFromOriginalCenter:originalListToggleCenter andTranslation:translation];
     self.barHolderView.center = [self newCenterFromOriginalCenter:originalTextFieldViewCenter andTranslation:translation];
+    self.showAndClearButton.center = [self newCenterFromOriginalCenter:originalShowAndClearButtonCenter andTranslation:translation];
 }
 
 -(CGPoint) newCenterFromOriginalCenter:(CGPoint) originalCenter andTranslation:(CGFloat) translation
