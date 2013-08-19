@@ -14,8 +14,8 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>divvy_logo.png</string>
-				<string>divvy_logo_retina.png</string>
+				<string>BikeRouteIconReg.png</string>
+				<string>BikeRouteIcon.png</string>
 			</array>
 		</dict>
 	</dict>
