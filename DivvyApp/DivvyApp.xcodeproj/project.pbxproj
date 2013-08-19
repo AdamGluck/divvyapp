@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		0F38186517C2D0C400C91863 /* BikeRouteIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F38186417C2D0C400C91863 /* BikeRouteIcon.png */; };
 		0F38186717C2D0FB00C91863 /* BikeRouteIconReg.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F38186617C2D0FB00C91863 /* BikeRouteIconReg.png */; };
+		0F38186917C2DCB500C91863 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F38186817C2DCB500C91863 /* Default.png */; };
+		0F38186D17C2DD8100C91863 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F38186C17C2DD8100C91863 /* Default@2x.png */; };
+		0F38186F17C2DE8600C91863 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F38186E17C2DE8600C91863 /* Default-568h@2x.png */; };
 		0F4CF49C1783A67600889B08 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F4CF49B1783A67600889B08 /* UIKit.framework */; };
 		0F4CF49E1783A67600889B08 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F4CF49D1783A67600889B08 /* Foundation.framework */; };
 		0F4CF4A01783A67600889B08 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F4CF49F1783A67600889B08 /* CoreGraphics.framework */; };
@@ -48,6 +51,9 @@
 /* Begin PBXFileReference section */
 		0F38186417C2D0C400C91863 /* BikeRouteIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BikeRouteIcon.png; sourceTree = "<group>"; };
 		0F38186617C2D0FB00C91863 /* BikeRouteIconReg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BikeRouteIconReg.png; sourceTree = "<group>"; };
+		0F38186817C2DCB500C91863 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		0F38186C17C2DD8100C91863 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		0F38186E17C2DE8600C91863 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0F4CF4981783A67600889B08 /* DivvyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DivvyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F4CF49B1783A67600889B08 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0F4CF49D1783A67600889B08 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -222,6 +228,9 @@
 		0F4CF48F1783A67600889B08 = {
 			isa = PBXGroup;
 			children = (
+				0F38186E17C2DE8600C91863 /* Default-568h@2x.png */,
+				0F38186C17C2DD8100C91863 /* Default@2x.png */,
+				0F38186817C2DCB500C91863 /* Default.png */,
 				0F38186617C2D0FB00C91863 /* BikeRouteIconReg.png */,
 				0F38186417C2D0C400C91863 /* BikeRouteIcon.png */,
 				0F4CF4A11783A67600889B08 /* DivvyApp */,
@@ -357,6 +366,9 @@
 				8D679557179EFBAB00AEAE51 /* LocationArrow.png in Resources */,
 				0F38186517C2D0C400C91863 /* BikeRouteIcon.png in Resources */,
 				0F38186717C2D0FB00C91863 /* BikeRouteIconReg.png in Resources */,
+				0F38186917C2DCB500C91863 /* Default.png in Resources */,
+				0F38186D17C2DD8100C91863 /* Default@2x.png in Resources */,
+				0F38186F17C2DE8600C91863 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
