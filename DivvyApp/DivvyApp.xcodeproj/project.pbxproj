@@ -18,9 +18,6 @@
 		0F4CF4A61783A67600889B08 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4A41783A67600889B08 /* InfoPlist.strings */; };
 		0F4CF4A81783A67600889B08 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4A71783A67600889B08 /* main.m */; };
 		0F4CF4AC1783A67600889B08 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4AB1783A67600889B08 /* AppDelegate.m */; };
-		0F4CF4AE1783A67600889B08 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4AD1783A67600889B08 /* Default.png */; };
-		0F4CF4B01783A67600889B08 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4AF1783A67600889B08 /* Default@2x.png */; };
-		0F4CF4B21783A67600889B08 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F4CF4B11783A67600889B08 /* Default-568h@2x.png */; };
 		0F4CF4C01783A7DB00889B08 /* BGLDivvyDataAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */; };
 		0F9B7831178A3B3700CAC533 /* BGLStationObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7830178A3B3700CAC533 /* BGLStationObject.m */; };
 		0F9B7834178A631700CAC533 /* GoogleBikeRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F9B7833178A631700CAC533 /* GoogleBikeRoute.m */; };
@@ -61,9 +58,6 @@
 		0F4CF4A91783A67600889B08 /* DivvyApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DivvyApp-Prefix.pch"; sourceTree = "<group>"; };
 		0F4CF4AA1783A67600889B08 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0F4CF4AB1783A67600889B08 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0F4CF4AD1783A67600889B08 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		0F4CF4AF1783A67600889B08 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		0F4CF4B11783A67600889B08 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0F4CF4BE1783A7DB00889B08 /* BGLDivvyDataAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLDivvyDataAccess.h; sourceTree = "<group>"; };
 		0F4CF4BF1783A7DB00889B08 /* BGLDivvyDataAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLDivvyDataAccess.m; sourceTree = "<group>"; };
 		0F9B782F178A3B3700CAC533 /* BGLStationObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLStationObject.h; sourceTree = "<group>"; };
@@ -287,9 +281,6 @@
 				0F4CF4A41783A67600889B08 /* InfoPlist.strings */,
 				0F4CF4A71783A67600889B08 /* main.m */,
 				0F4CF4A91783A67600889B08 /* DivvyApp-Prefix.pch */,
-				0F4CF4AD1783A67600889B08 /* Default.png */,
-				0F4CF4AF1783A67600889B08 /* Default@2x.png */,
-				0F4CF4B11783A67600889B08 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -346,9 +337,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F4CF4A61783A67600889B08 /* InfoPlist.strings in Resources */,
-				0F4CF4AE1783A67600889B08 /* Default.png in Resources */,
-				0F4CF4B01783A67600889B08 /* Default@2x.png in Resources */,
-				0F4CF4B21783A67600889B08 /* Default-568h@2x.png in Resources */,
 				8DF87C211787546A00A77764 /* GoogleMaps.bundle in Resources */,
 				8D679550179EF3DB00AEAE51 /* MainStoryboard.storyboard in Resources */,
 				8D679553179EF99B00AEAE51 /* MainStoryboard.storyboard in Resources */,
